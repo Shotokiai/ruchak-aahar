@@ -997,7 +997,7 @@ export default function App() {
     fetch('/api/profile')
       .then(r => r.json())
       .then(async p => {
-        if (p && (p.age || p.date_of_birth)) {
+        if (p && (p.age || p.date_of_birth || p.weight_kg)) {
           setProfileRaw({
             age: p.age, weightKg: p.weight_kg, heightCm: p.height_cm,
             pref: p.food_pref, allergies: p.allergies,

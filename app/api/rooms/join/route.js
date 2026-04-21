@@ -1,12 +1,11 @@
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { getToken } from 'next-auth/jwt';
 import { supabaseAdmin } from '../../../../lib/supabase-admin';
 
-export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return Response.json({ error: 'Not authenticated' }, { status: 401 });
+export async function GET(req) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  if (!token?.supabaseId) return Response.json({ error: 'Not authenticated' }, { status: 401 });
 
-  const userId = session.user.supabaseId;
+  const userId = token.supabaseId;
 
   const { data: membership } = await supabaseAdmin
     .from('room_members')
