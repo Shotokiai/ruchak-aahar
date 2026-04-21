@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" fill="none">
+  <rect width="960" height="640" rx="32" fill="#E5EEF6" />
+  <rect x="72" y="72" width="816" height="336" rx="28" fill="#A8CEE8" />
+  <rect x="128" y="444" width="704" height="130" rx="18" fill="#F0F8FF" />
+  <text x="480" y="260" fill="#1E4D74" font-family="Inter, sans-serif" font-size="56" font-weight="700" text-anchor="middle">AI Recipe</text>
+  <text x="480" y="340" fill="#2E627F" font-family="Inter, sans-serif" font-size="32" text-anchor="middle">Extraction</text>
+</svg>

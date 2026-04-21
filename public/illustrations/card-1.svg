@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" fill="none">
+  <rect width="960" height="640" rx="32" fill="#F5E9DE" />
+  <rect x="80" y="80" width="800" height="320" rx="28" fill="#D9BFA8" />
+  <rect x="120" y="420" width="720" height="140" rx="18" fill="#FFF7F0" />
+  <text x="480" y="240" fill="#5A4032" font-family="Inter, sans-serif" font-size="56" font-weight="700" text-anchor="middle">Dinner</text>
+  <text x="480" y="320" fill="#7C5A48" font-family="Inter, sans-serif" font-size="32" text-anchor="middle">Debate settled</text>
+</svg>

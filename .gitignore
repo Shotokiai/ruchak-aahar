@@ -1,0 +1,18 @@
+# Environment variables — NEVER commit these
+.env
+.env.local
+.env.*.local
+
+# Next.js build output
+.next/
+out/
+
+# Dependencies
+node_modules/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Debug logs
+npm-debug.log*

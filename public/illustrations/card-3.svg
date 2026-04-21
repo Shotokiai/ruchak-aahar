@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" fill="none">
+  <rect width="960" height="640" rx="32" fill="#F3F4E6" />
+  <rect x="84" y="84" width="792" height="340" rx="28" fill="#CED2A2" />
+  <rect x="130" y="454" width="700" height="118" rx="18" fill="#FEFBE9" />
+  <text x="480" y="260" fill="#4B5733" font-family="Inter, sans-serif" font-size="56" font-weight="700" text-anchor="middle">Family</text>
+  <text x="480" y="340" fill="#5B653E" font-family="Inter, sans-serif" font-size="32" text-anchor="middle">Voting</text>
+</svg>

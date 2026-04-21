@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>The Culinary Hearth</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#1A1A1A;display:flex;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;}
+    #root{width:100%;max-width:390px;min-height:100vh;background:#F5EFE0;overflow-x:hidden;position:relative;}
+    input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:#E0D8CC;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#7B2525;cursor:pointer;box-shadow:0 2px 8px rgba(123,37,37,.4);}
+    input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#7B2525;cursor:pointer;border:none;}
+    ::-webkit-scrollbar{width:0;}
+    .fade-in{animation:fadeIn .3s ease;}
+    .slide-up{animation:slideUp .35s cubic-bezier(.4,0,.2,1);}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    .tap:active{transform:scale(.96);transition:transform .1s;}
+    .vote-skip:active{transform:scale(.88) rotate(-5deg);transition:transform .15s;}
+    .vote-love:active{transform:scale(.88);transition:transform .15s;}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useEffect,useRef,useCallback}=React;
+
+const C={bg:'#F5EFE0',primary:'#7B2525',dark:'#1A1A1A',card:'#FFFFFF',text:'#1A1A1A',muted:'#9A8E82',green:'#4CAF50',border:'#E8DDD0',light:'#F0E8DC'};
+
+const DISHES=[
+  {id:1,name:"Dal Makhani",img:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&q=80",protein:32,carbs:18,fiber:6,cal:280,desc:'"Yeh sirf dal nahi, emotional support system hai foodie logon ka"',by:"Omkar",votes:3,
+   ingredients:["1 cup whole black lentils (urad dal)","¼ cup red kidney beans","2 tbsp butter","1 cup tomato puree","1 tsp cumin seeds","2 tsp garam masala","½ cup heavy cream","Salt to taste"],
+   steps:["Soak lentils and beans overnight","Pressure cook for 6-8 whistles until soft","Heat butter, add cumin seeds and tomato puree","Cook till oil separates, then add cream","Combine with lentils and simmer 25 mins","Garnish with cream and serve hot"]},
+  {id:2,name:"Roasted Salmon & Spring Greens",img:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&q=80",protein:15,carbs:38,fiber:9,cal:320,desc:'"A light, fresh meal for a busy Tuesday. Quick 20-min prep."',by:"Sush",votes:3,confirmed:true,
+   ingredients:["2 salmon fillets (200g each)","1 bunch asparagus","2 cups baby spinach","1 lemon, sliced","3 tbsp olive oil","2 garlic cloves, minced","Salt and black pepper"],
+   steps:["Preheat oven to 200°C","Season salmon with salt, pepper, garlic and lemon","Roast salmon and asparagus for 15-18 minutes","Sauté spinach briefly with olive oil","Plate everything together with lemon wedge"]},
+  {id:3,name:"Butter Chicken",img:"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=500&q=80",protein:28,carbs:22,fiber:4,cal:340,desc:'"The OG comfort food. Basically a warm hug in curry form."',by:"Rutuja",votes:2,
+   ingredients:["500g chicken breast","200ml cream","2 cups tomato puree","3 tbsp butter","2 tsp garam masala","1 tbsp ginger-garlic paste","1 tsp red chilli powder"],
+   steps:["Marinate chicken in yogurt and spices 1 hour","Grill or pan-fry until lightly charred","Make sauce: butter + onions + tomato + spices","Add cream and simmer 15 mins","Add chicken and cook 10 more mins","Serve with rice or naan"]},
+  {id:4,name:"Paneer Tikka",img:"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500&q=80",protein:24,carbs:14,fiber:3,cal:260,desc:'"Vegetarians deserve drama too — and this delivers every time"',by:"Omkar",votes:1,
+   ingredients:["400g paneer, cubed","1 cup thick yogurt","2 tbsp tikka masala","1 capsicum, chunked","1 red onion","Chaat masala","Lemon juice"],
+   steps:["Marinate paneer + veggies in yogurt + spices 2 hrs","Thread onto skewers alternating pieces","Grill on high heat 10-12 mins, turning once","Dust with chaat masala and lemon","Serve with mint chutney"]},
+  {id:5,name:"Chicken Biryani",img:"https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=500&q=80",protein:35,carbs:52,fiber:5,cal:480,desc:'"Sunday ki feeling, any day of the week. No further questions."',by:"Sush",votes:3,
+   ingredients:["500g chicken","2 cups basmati rice","Whole spices (bay leaf, cardamom, cloves)","Saffron in warm milk","1 cup fried onions","Mint leaves","3 tbsp ghee"],
+   steps:["Marinate chicken in spiced yogurt 3 hours","Par-cook rice with whole spices to 70%","Layer rice and chicken in heavy pot","Add saffron milk, fried onions and mint","Dum cook on low heat 25-30 mins","Rest 10 mins before serving with raita"]}
+];
+
+const MEMBERS=[
+  {id:1,name:"Sush",role:"admin",initials:"SU",eating:true,color:"#D4956A"},
+  {id:2,name:"Omkar",initials:"OM",eating:true,color:"#6A9FD4"},
+  {id:3,name:"Rutuja",initials:"RU",eating:false,color:"#9A6AD4"},
+];
+
+const PLAN=[
+  {day:"Mon",date:7,dish:DISHES[1]},{day:"Tue",date:8,dish:DISHES[0]},
+  {day:"Wed",date:9,dish:DISHES[4]},{day:"Thu",date:10,dish:DISHES[2]},
+  {day:"Fri",date:11,dish:DISHES[3]},{day:"Sat",date:12,dish:null},{day:"Sun",date:13,dish:null}
+];
+
+// ── BOTTOM NAV ────────────────────────────────────────────────────
+const BottomNav=({active,go})=>{
+  const tabs=[
+    {id:'hearth',label:'Hearth',icon:<HouseIcon active={active==='hearth'}/>},
+    {id:'import',label:'Import',icon:<ImportIcon active={active==='import'}/>},
+    {id:'match',label:'Match',icon:<MatchIcon active={active==='match'}/>},
+    {id:'planner',label:'Planner',icon:<PlanIcon active={active==='planner'}/>},
+  ];
+  return(
+    <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:390,background:'white',borderTop:`1px solid ${C.border}`,padding:'10px 8px 22px',display:'flex',justifyContent:'space-around',zIndex:100,boxShadow:'0 -4px 20px rgba(0,0,0,.06)'}}>
+      {tabs.map(t=>(
+        <div key={t.id} className="tap" onClick={()=>go(t.id)} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4,cursor:'pointer',minWidth:60}}>
+          <div style={{width:46,height:46,borderRadius:'50%',background:active===t.id?C.primary:'transparent',display:'flex',alignItems:'center',justifyContent:'center',transition:'background .2s'}}>
+            {t.icon}
+          </div>
+          <span style={{fontSize:11,color:active===t.id?C.primary:C.muted,fontWeight:active===t.id?600:400,transition:'color .2s'}}>{t.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+const HouseIcon=({active})=><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 9L12 2L21 9V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V9Z" stroke={active?'white':C.muted} strokeWidth="2" fill={active?'white':'none'}/></svg>;
+const ImportIcon=({active})=><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3V15M12 15L8 11M12 15L16 11M3 17V20C3 20.55 3.45 21 4 21H20C20.55 21 21 20.55 21 20V17" stroke={active?'white':C.muted} strokeWidth="2" strokeLinecap="round"/></svg>;
+const MatchIcon=({active})=><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 3 15 3 8.5C3 6 5 4 7.5 4C9.24 4 10.91 4.96 12 6.5C13.09 4.96 14.76 4 16.5 4C19 4 21 6 21 8.5C21 15 12 21 12 21Z" stroke={active?'white':C.muted} strokeWidth="2" fill={active?'white':'none'}/></svg>;
+const PlanIcon=({active})=><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke={active?'white':C.muted} strokeWidth="2"/><path d="M16 2V6M8 2V6M3 10H21" stroke={active?'white':C.muted} strokeWidth="2" strokeLinecap="round"/><circle cx="8" cy="15" r="1.5" fill={active?'white':C.muted}/><circle cx="12" cy="15" r="1.5" fill={active?'white':C.muted}/><circle cx="16" cy="15" r="1.5" fill={active?'white':C.muted}/></svg>;
+
+// ── WELCOME SCREEN ─────────────────────────────────────────────────
+const WelcomeScreen=({go})=>{
+  const[slide,setSlide]=useState(0);
+  const slides=[
+    {img:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&q=80",title:"No more dinner debates",desc:'Turn "What\'s for dinner?" into a celebration. We handle the consensus so you can focus on the cooking.'},
+    {img:"https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&q=80",title:"AI-powered recipe extraction",desc:"Transform food reels and blogs into clean, structured cooking steps instantly."},
+    {img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=500&q=80",title:"Family-wide voting",desc:"Give everyone a seat at the table. Cast votes on the weekly menu and find meals everyone loves."}
+  ];
+  useEffect(()=>{const t=setInterval(()=>setSlide(s=>(s+1)%3),3800);return()=>clearInterval(t);},[]);
+  const s=slides[slide];
+  return(
+    <div className="fade-in" style={{display:'flex',flexDirection:'column',minHeight:'100vh',padding:'52px 24px 40px',background:C.bg}}>
+      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:32}}>
+        <div style={{width:38,height:38,borderRadius:'50%',background:C.primary,display:'flex',alignItems:'center',justifyContent:'center'}}>
+          <span style={{fontSize:18,color:'white'}}>🍽</span>
+        </div>
+        <span style={{fontFamily:'Playfair Display',fontWeight:700,fontSize:17,color:C.primary}}>The Culinary Hearth</span>
+      </div>
+      <div style={{borderRadius:28,overflow:'hidden',height:268,marginBottom:28,position:'relative',boxShadow:'0 12px 32px rgba(0,0,0,.14)'}}>
+        <img src={s.img} alt="" style={{width:'100%',height:'100%',objectFit:'cover',transition:'opacity .5s'}}/>
+        <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.2))'}}/>
+      </div>
+      <div style={{flex:1,minHeight:100}}>
+        <h1 style={{fontFamily:'Playfair Display',fontSize:28,fontWeight:700,color:C.text,marginBottom:10,lineHeight:1.25}}>{s.title}</h1>
+        <p style={{color:C.muted,fontSize:14.5,lineHeight:1.65}}>{s.desc}</p>
+      </div>
+      <div style={{display:'flex',gap:7,justifyContent:'center',margin:'20px 0 24px'}}>
+        {[0,1,2].map(i=><div key={i} onClick={()=>setSlide(i)} style={{height:6,borderRadius:3,background:i===slide?C.primary:'#D8CFBF',width:i===slide?28:8,transition:'all .3s',cursor:'pointer'}}/>)}
+      </div>
+      <button className="tap" onClick={()=>go('onboarding1')} style={{width:'100%',padding:'15px',borderRadius:50,border:'2px solid #1A1A1A',background:'white',display:'flex',alignItems:'center',justifyContent:'center',gap:12,fontSize:15,fontWeight:600,cursor:'pointer',marginBottom:14,fontFamily:'DM Sans'}}>
+        <GoogleG/> Sign in with Google
+      </button>
+      <p style={{textAlign:'center',color:C.muted,fontSize:13.5}}>Already have a hearth? <span onClick={()=>go('hearth')} style={{color:C.primary,fontWeight:600,cursor:'pointer'}}>Log in</span></p>
+    </div>
+  );
+};
+
+const GoogleG=()=><svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>;
+
+// ── ONBOARDING STEP 1 ───────────────────────────────────────────────
+const Onboarding1=({go})=>{
+  const[age,setAge]=useState(28);
+  const[wt,setWt]=useState(165);
+  const[ht,setHt]=useState(71);
+  const[unit,setUnit]=useState('inch');
+  const fmtHt=in_=>unit==='inch'?`${Math.floor(in_/12)}'${in_%12}"`:`${Math.round(in_*2.54)} cm`;
+  return(
+    <div className="slide-up" style={{padding:'52px 24px 40px',minHeight:'100vh',background:C.bg}}>
+      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:12}}>
+        <div className="tap" onClick={()=>go('welcome')} style={{width:34,height:34,borderRadius:'50%',background:'#E8DDD0',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:15}}>✕</div>
+        <div>
+          <div style={{fontFamily:'Playfair Display',fontWeight:700,fontSize:15}}>Personalize Your Hearth</div>
+          <div style={{fontSize:12,color:C.muted}}>Step 1 of 2</div>
+        </div>
+      </div>
+      <div style={{height:4,background:'#E0D8CC',borderRadius:2,marginBottom:32}}>
+        <div style={{height:'100%',width:'50%',background:C.primary,borderRadius:2}}/>
+      </div>
+      <h1 style={{fontFamily:'Playfair Display',fontSize:27,fontWeight:700,marginBottom:28,lineHeight:1.3}}>Let's get to know <span style={{color:C.primary}}>the chef.</span></h1>
+      <SliderCard label="What is your age?" val={age} set={setAge} min={13} max={100} lo="13" hi="100"/>
+      <SliderCard label="What is your body weight?" val={`${wt}`} rawVal={wt} set={setWt} min={80} max={350} lo="80 lbs" hi="350 lbs" suffix=" lbs"/>
+      <div style={{background:'white',borderRadius:18,padding:'18px 20px',marginBottom:16}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14}}>
+          <div>
+            <div style={{fontSize:14,fontWeight:500,marginBottom:8}}>What is your height?</div>
+            <div style={{display:'flex',gap:4}}>
+              {['inch','cm'].map(u=><span key={u} onClick={()=>setUnit(u)} style={{padding:'3px 12px',borderRadius:20,fontSize:12,background:unit===u?C.dark:'#F0E8DC',color:unit===u?'white':C.muted,cursor:'pointer',fontWeight:500,transition:'all .2s'}}>{u}</span>)}
+            </div>
+          </div>
+          <span style={{fontFamily:'Playfair Display',fontSize:26,fontWeight:700,color:C.primary}}>{fmtHt(ht)}</span>
+        </div>
+        <input type="range" min={48} max={96} value={ht} onChange={e=>setHt(+e.target.value)}/>
+        <div style={{display:'flex',justifyContent:'space-between',fontSize:12,color:C.muted,marginTop:8}}><span>4'0"</span><span>8'0"</span></div>
+      </div>
+      <button className="tap" onClick={()=>go('onboarding2')} style={{width:'100%',padding:'15px',borderRadius:50,border:'none',background:C.primary,color:'white',fontSize:15,fontWeight:600,cursor:'pointer',marginTop:12,fontFamily:'DM Sans'}}>
+        Continue to Preferences →
+      </button>
+    </div>
+  );
+};
+const SliderCard=({label,val,rawVal,set,min,max,lo,hi,suffix=''})=>(
+  <div style={{background:'white',borderRadius:18,padding:'18px 20px',marginBottom:16}}>
+    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
+      <div style={{fontSize:14,fontWeight:500,maxWidth:'60%'}}>{label}</div>
+      <span style={{fontFamily:'Playfair Display',fontSize:26,fontWeight:700,color:C.primary}}>{val}{suffix}</span>
+    </div>
+    <input type="range" min={min} max={max} value={rawVal||val} onChange={e=>set(+e.target.value)}/>
+    <div style={{display:'flex',justifyContent:'space-between',fontSize:12,color:C.muted,marginTop:8}}><span>{lo}</span><span>{hi}</span></div>
+  </div>
+);
+
+// ── ONBOARDING STEP 2 ───────────────────────────────────────────────
+const Onboarding2=({go})=>{
+  const[sel,setSel]=useState('nonveg');
+  const opts=[
+    {id:'veg',emoji:'🥗',label:'Veg',desc:'Plant-based diet including dairy'},
+    {id:'nonveg',emoji:'🍗',label:'Non-Veg',desc:'Includes meat, poultry, and seafood'},
+    {id:'vegan',emoji:'🥑',label:'Vegan',desc:'Strict plant-based, no animal products'},
+  ];
+  return(
+    <div className="slide-up" style={{padding:'52px 24px 40px',minHeight:'100vh',background:C.bg}}>
+      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:12}}>
+        <div className="tap" onClick={()=>go('onboarding1')} style={{width:34,height:34,borderRadius:'50%',background:'#E8DDD0',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:15}}>←</div>
+        <div>
+          <div style={{fontFamily:'Playfair Display',fontWeight:700,fontSize:15}}>Personalize Your Hearth</div>
+          <div style={{fontSize:12,color:C.muted}}>Step 2 of 2</div>
+        </div>
+      </div>
+      <div style={{height:4,background:'#E0D8CC',borderRadius:2,marginBottom:32}}>
+        <div style={{height:'100%',width:'100%',background:C.primary,borderRadius:2}}/>
+      </div>
+      <h1 style={{fontFamily:'Playfair Display',fontSize:27,fontWeight:700,marginBottom:28,lineHeight:1.3}}>What is your <span style={{color:C.primary}}>food preference</span>?</h1>
+      {opts.map(o=>(
+        <div key={o.id} className="tap" onClick={()=>setSel(o.id)} style={{background:'white',borderRadius:18,padding:'16px 20px',marginBottom:12,display:'flex',alignItems:'center',gap:14,cursor:'pointer',border:`2px solid ${sel===o.id?C.primary:'transparent'}`,transition:'border .2s'}}>
+          <div style={{width:46,height:46,borderRadius:'50%',background:'#F5EFE0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{o.emoji}</div>
+          <div style={{flex:1}}>
+            <div style={{fontWeight:600,fontSize:15}}>{o.label}</div>
+            <div style={{fontSize:13,color:C.muted,marginTop:2}}>{o.desc}</div>
+          </div>
+          <div style={{width:22,height:22,borderRadius:'50%',background:sel===o.id?C.primary:'transparent',border:`2px solid ${sel===o.id?C.primary:'#D0C8BC'}`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .2s'}}>
+            {sel===o.id&&<span style={{color:'white',fontSize:11,fontWeight:700}}>✓</span>}
+          </div>
+        </div>
+      ))}
+      <button className="tap" onClick={()=>go('createjoin')} style={{width:'100%',padding:'15px',borderRadius:50,border:'none',background:C.primary,color:'white',fontSize:15,fontWeight:600,cursor:'pointer',marginTop:20,fontFamily:'DM Sans'}}>Continue</button>
+    </div>
+  );
+};
+
+// ── CREATE / JOIN ROOM ──────────────────────────────────────────────
+const CreateJoinScreen=({go})=>{
+  const[mode,setMode]=useState(null);
+  const[roomName,setRoomName]=useState('');
+  const[code,setCode]=useState('');
+  const[copied,setCopied]=useState(false);
+  const[joined,setJoined]=useState(false);
+  const genCode='DISH42';
+  const copy=()=>{setCopied(true);setTimeout(()=>setCopied(false),2000);};
+  const tryJoin=()=>{if(code.length===6){setJoined(true);setTimeout(()=>go('hearth'),1400);}};
+  if(mode==='create') return(
+    <div className="slide-up" style={{padding:'52px 24px 40px',minHeight:'100vh',background:C.bg}}>
+      <div className="tap" onClick={()=>setMode(null)} style={{width:38,height:38,borderRadius:'50%',background:'#E8DDD0',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',marginBottom:28,fontSize:16}}>←</div>
+      <h1 style={{fontFamily:'Playfair Display',fontSize:28,fontWeight:700,marginBottom:6}}>Create your <span style={{color:C.primary}}>Family Room</span></h1>
+      <p style={{color:C.muted,marginBottom:28,fontSize:14}}>Name your hearth and invite your family</p>
+      <div style={{background:'white',borderRadius:18,padding:'18px 20px',marginBottom:14}}>
+        <label style={{fontSize:12,color:C.muted,fontWeight:600,display:'block',marginBottom:8,letterSpacing:.5}}>FAMILY ROOM NAME</label>
+        <input value={roomName} onChange={e=>setRoomName(e.target.value)} placeholder="e.g. Sharma Family" style={{width:'100%',border:'none',outline:'none',fontSize:16,fontFamily:'DM Sans',color:C.text,background:'transparent'}}/>
+      </div>
+      {roomName.length>1&&(
+        <div style={{background:'white',borderRadius:18,padding:'18px 20px',marginBottom:24}}>
+          <div style={{fontSize:12,color:C.muted,fontWeight:600,marginBottom:10,letterSpacing:.5}}>YOUR INVITE CODE</div>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+            <span style={{fontFamily:'Playfair Display',fontSize:36,fontWeight:700,letterSpacing:6,color:C.primary}}>{genCode}</span>
+            <button onClick={copy} style={{padding:'9px 18px',borderRadius:20,background:copied?'#4CAF50':C.dark,color:'white',border:'none',cursor:'pointer',fontSize:13,fontWeight:600,transition:'background .3s'}}>{copied?'✓ Copied':'Copy'}</button>
+          </div>
+          <p style={{fontSize:12,color:C.muted,marginTop:8}}>Share this with your family to invite them</p>
+        </div>
+      )}
+      <button className="tap" onClick={()=>go('hearth')} style={{width:'100%',padding:'15px',borderRadius:50,border:'none',background:roomName.length>1?C.primary:'#D0C8BC',color:'white',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:'DM Sans'}}>
+        Create Room & Continue
+      </button>
+    </div>
+  );
+  if(mode==='join') return(
+    <div className="slide-up" style={{padding:'52px 24px 40px',minHeight:'100vh',background:C.bg}}>
+      <div className="tap" onClick={()=>setMode(null)} style={{width:38,height:38,borderRadius:'50%',background:'#E8DDD0',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',marginBottom:28,fontSize:16}}>←</div>
+      <h1 style={{fontFamily:'Playfair Display',fontSize:28,fontWeight:700,marginBottom:6}}>Join a <span style={{color:C.primary}}>Family Room</span></h1>
+      <p style={{color:C.muted,marginBottom:28,fontSize:14}}>Enter the 6-character code from your family</p>
+      <div style={{background:'white',borderRadius:18,padding:'18px 20px',marginBottom:16}}>
+        <label style={{fontSize:12,color:C.muted,fontWeight:600,display:'block',marginBottom:10,letterSpacing:.5}}>INVITE CODE</label>
+        <input value={code} onChange={e=>setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6))} placeholder="DISH42" maxLength={6} style={{width:'100%',border:'none',outline:'none',fontSize:36,fontFamily:'Playfair Display',fontWeight:700,letterSpacing:6,color:C.primary,background:'transparent'}}/>
+      </div>
+      {joined&&<div style={{background:'#E8F5E9',borderRadius:14,padding:'14px 18px',marginBottom:16,color:'#2E7D32',fontWeight:600,fontSize:14,textAlign:'center'}}>✓ Joining Sharma Family · 3 members</div>}
+      {code.length===6&&!joined&&<div style={{background:'#FFF8E1',borderRadius:14,padding:'14px 18px',marginBottom:16,color:'#F57F17',fontSize:14}}>✓ Found: Sharma Family · 3 members</div>}
+      <button className="tap" onClick={tryJoin} style={{width:'100%',padding:'15px',borderRadius:50,border:'none',background:code.length===6?C.primary:'#D0C8BC',color:'white',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:'DM Sans',transition:'background .2s'}}>
+        Join Room
+      </button>
+    </div>
+  );
+  return(
+    <div className="fade-in" style={{padding:'52px 24px 40px',minHeight:'100vh',background:C.bg,display:'flex',flexDirection:'column'}}>
+      <div style={{textAlign:'center',marginBottom:48}}>
+        <div style={{width:72,height:72,borderRadius:'50%',background:C.primary,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 18px',fontSize:34,boxShadow:`0 8px 24px rgba(123,37,37,.3)`}}>🍽</div>
+        <h1 style={{fontFamily:'Playfair Display',fontSize:28,fontWeight:700}}>Your <span style={{color:C.primary}}>Hearth</span> awaits</h1>
+        <p style={{color:C.muted,marginTop:8,fontSize:14}}>Create a family room or join one</p>
+      </div>
+      <div style={{flex:1,display:'flex',flexDirection:'column',gap:16}}>
+        <div className="tap" onClick={()=>setMode('create')} style={{background:C.primary,borderRadius:22,padding:'26px 24px',cursor:'pointer',boxShadow:`0 8px 28px rgba(123,37,37,.28)`}}>
+          <div style={{fontSize:34,marginBottom:10}}>🏡</div>
+          <div style={{color:'white',fontWeight:700,fontSize:19,fontFamily:'Playfair Display',marginBottom:4}}>Create Family Room</div>
+          <div style={{color:'rgba(255,255,255,.65)',fontSize:13}}>Start your hearth as Admin</div>
+        </div>
+        <div className="tap" onClick={()=>setMode('join')} style={{background:'white',borderRadius:22,padding:'26px 24px',cursor:'pointer',border:`2px solid ${C.border}`}}>
+          <div style={{fontSize:34,marginBottom:10}}>🔑</div>
+          <div style={{fontWeight:700,fontSize:19,fontFamily:'Playfair Display',marginBottom:4}}>Join Family Room</div>
+          <div style={{color:C.muted,fontSize:13}}>Enter an invite code from your family</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── HOME / HEARTH ───────────────────────────────────────────────────
+const HearthScreen=({go,showRecipe})=>{
+  const ate=1240,max=1800,burned=360,remain=max-ate+burned;
+  const pct=ate/max;
+  const r=38,circ=2*Math.PI*r;
+  const dish=DISHES[1];
+  return(
+    <div className="fade-in" style={{paddingBottom:100,minHeight:'100vh',background:C.bg}}>
+      {/* Header */}
+      <div style={{padding:'52px 20px 14px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div style={{width:42,height:42,borderRadius:'50%',background:C.primary,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20}}>🍽</div>
+          <div>
+            <div style={{fontFamily:'Playfair Display',fontWeight:700,fontSize:15.5,color:C.primary}}>The Culinary Hearth</div>
+            <div style={{fontSize:11,color:C.muted}}>Code: 2356</div>
+          </div>
+        </div>
+        <div style={{width:38,height:38,borderRadius:'50%',background:'white',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(0,0,0,.08)',cursor:'pointer'}}>🔔</div>
+      </div>
+      {/* Search */}
+      <div style={{padding:'0 20px 18px'}}>
+        <div style={{display:'flex',background:'white',borderRadius:50,overflow:'hidden',alignItems:'center',padding:'4px 4px 4px 16px',boxShadow:'0 2px 10px rgba(0,0,0,.07)'}}>
+          <span style={{fontSize:15,marginRight:8,flexShrink:0}}>🔍</span>
+          <input placeholder="Search or paste the link here..." style={{flex:1,border:'none',outline:'none',fontSize:13.5,background:'transparent',fontFamily:'DM Sans',color:C.text,minWidth:0}}/>
+          <button className="tap" onClick={()=>go('import')} style={{background:C.primary,color:'white',border:'none',borderRadius:50,padding:'10px 16px',fontSize:12.5,fontWeight:600,cursor:'pointer',fontFamily:'DM Sans',flexShrink:0}}>Add to pool</button>
+        </div>
+      </div>
+      {/* Calorie ring */}
+      <div style={{margin:'0 20px 20px',background:C.dark,borderRadius:22,padding:'20px'}}>
+        <div style={{display:'flex',alignItems:'center',gap:20}}>
+          <div style={{position:'relative',width:90,height:90,flexShrink:0}}>
+            <svg width="90" height="90" style={{transform:'rotate(-90deg)'}}>
+              <circle cx="45" cy="45" r={r} fill="none" stroke="rgba(255,255,255,.1)" strokeWidth="8"/>
+              <circle cx="45" cy="45" r={r} fill="none" stroke="white" strokeWidth="8" strokeLinecap="round"
+                strokeDasharray={`${circ*pct} ${circ*(1-pct)}`}/>
+            </svg>
+            <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',textAlign:'center'}}>
+              <div style={{color:'white',fontWeight:700,fontSize:17,fontFamily:'Playfair Display',lineHeight:1}}>{ate}</div>
+              <div style={{color:'rgba(255,255,255,.55)',fontSize:10,marginTop:2}}>kcal</div>
+            </div>
+          </div>
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:14}}>
+              <span style={{fontSize:18}}>🍴</span>
+              <div>
+                <div style={{color:'rgba(255,255,255,.5)',fontSize:11}}>Food</div>
+                <div style={{color:'white',fontSize:13.5,fontWeight:600}}>{ate} / {max} kcal</div>
+              </div>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:10}}>
+              <span style={{fontSize:18}}>🏃</span>
+              <div>
+                <div style={{color:'rgba(255,255,255,.5)',fontSize:11}}>Exercise</div>
+                <div style={{color:'white',fontSize:13.5,fontWeight:600}}>+{burned} kcal burned</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={{marginTop:14,padding:'9px 14px',background:'rgba(255,255,255,.08)',borderRadius:10,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <span style={{color:'rgba(255,255,255,.6)',fontSize:12}}>Remaining today</span>
+          <span style={{color:'white',fontWeight:700,fontSize:13}}>{remain} kcal</span>
+        </div>
+      </div>
+      {/* Members */}
+      <div style={{padding:'0 20px 20px'}}>
+        <h2 style={{fontFamily:'Playfair Display',fontWeight:700,fontSize:19,marginBottom:14}}>At The Table Today</h2>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+          {MEMBERS.map(m=>(
+            <div key={m.id} className="tap" style={{background:'white',borderRadius:18,padding:'16px',textAlign:'center',position:'relative',cursor:'pointer'}}>
+              {m.role==='admin'&&<span style={{position:'absolute',top:10,right:12,fontSize:14}}>⭐</span>}
+              <div style={{position:'relative',display:'inline-block',marginBottom:8}}>
+                <div style={{width:52,height:52,borderRadius:'50%',background:m.color,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,fontWeight:700,color:'white',fontFamily:'Playfair Display'}}>{m.initials}</div>
+                <div style={{position:'absolute',bottom:1,right:1,width:13,height:13,borderRadius:'50%',background:m.eating?C.green:'#F44336',border:'2px solid white'}}/>
+              </div>
+              <div style={{fontWeight:600,fontSize:14}}>{m.name}</div>
+              {m.role==='admin'&&<div style={{fontSize:10,color:C.primary,fontWeight:700,marginTop:2,letterSpacing:.5}}>COOKING TONIGHT</div>}
+              {!m.eating&&<div style={{fontSize:10,color:C.muted,fontWeight:600,marginTop:2}}>NOT EATING</div>}
+            </div>
+          ))}
+          <div className="tap" style={{background:'white',borderRadius:18,padding:'16px',textAlign:'center',border:`2px dashed ${C.border}`,cursor:'pointer'}}>
+            <div style={{width:52,height:52,borderRadius:'50%',background:C.light,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,margin:'0 auto 8px',color:C.muted}}>+</div>
+            <div style={{fontWeight:600,fontSize:13,color:C.text}}>Add Member</div>
+            <div style={{fontSize:10,color:C.muted,marginTop:2,letterSpacing:.3}}>GROW THE GROUP</div>
+          </div>
+        </div>
+      </div>
+      {/* Tonight's Plan */}
+      <div style={{padding:'0 20px 20px'}}>
+        <h2 style={{fontFamily:'Playfair Display',fontWeight:700,fontSize:19,marginBottom:14}}>Tonight's Plan</h2>
+        <div style={{background:'white',borderRadius:22,overflow:'hidden',boxShadow:'0 4px 20px rgba(0,0,0,.07)'}}>
+          <div style={{position:'relative'}}>
+            <img src={dish.img} alt={dish.name} style={{width:'100%',height:210,objectFit:'cover'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(transparent 40%,rgba(0,0,0,.3))'}}/>
+          </div>
+          <div style={{padding:'18px 20px 20px'}}>
+            {dish.confirmed&&<span style={{background:'#E8F5E9',color:'#2E7D32',padding:'4px 12px',borderRadius:20,fontSize:11,fontWeight:700,letterSpacing:.5}}>CONFIRMED</span>}
+            <h3 style={{fontFamily:'Playfair Display',fontSize:22,fontWeight:700,margin:'10px 0 6px',lineHeight:1.25}}>{dish.name}</h3>
+            <p style={{color:C.muted,fontSize:13.5,fontStyle:'italic',marginBottom:18,lineHeight:1.6}}>{dish.desc}</p>
+            <div style={{display:'flex',gap:28,marginBottom:18}}>
+              {[['PROTEIN',dish.protein],['FIBER',dish.fiber],['CARBS',dish.carbs]].map(([l,v])=>(
+                <div key={l}>
+                  <div style={{fontFamily:'Playfair Display',fontSize:22,fontWeight:700,lineHeight:1}}>{v}<span style={{fontSize:14}}> gm</span></div>
+                  <div style={{fontSize:10,color:C.muted,fontWeight:700,marginTop:3,letterSpacing:.5}}>{l}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <div style={{display:'flex'}}>
+                {MEMBERS.map((m,i)=><div key={m.id} style={{width:30,height:30,borderRadius:'50%',background:m.color,border:'2px solid white',marginLeft:i>0?-8:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,color:'white'}}>{m.initials[0]}</div>)}
+              </div>
+              <button className="tap" onClick={()=>showRecipe(dish)} style={{background:C.primary,color:'white',border:'none',borderRadius:50,padding:'12px 24px',fontSize:14,fontWeight:600,cursor:'pointer',fontFamily:'DM Sans',boxShadow:`0 4px 16px rgba(123,37,37,.3)`}}>View Recipe</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <BottomNav active="hearth" go={go}/>
+    </div>
+  );
+};
+
+// ── MATCH / VOTING ──────────────────────────────────────────────────
+const MatchScreen=({go,showRecipe})=>{
+  const[idx,setIdx]=useState(0);
+  const[votes,setVotes]=useState({});
+  const[anim,setAnim]=useState(null);
+  const dish=DISHES[idx];
+  const vote=liked=>{
+    setAnim(liked?'right':'left');
+    setTimeout(()=>{setVotes(v=>({...v,[dish.id]:liked}));setIdx(i=>i+1);setAnim(null);},280);
+  };
+  if(idx>=DISHES.length) return(
+    <div className="fade-in" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'100vh',padding:'40px 24px',textAlign:'center',paddingBottom:100,background:C.bg}}>
+      <div style={{fontSize:68,marginBottom:20}}>🎉</div>
+      <h2 style={{fontFamily:'Playfair Display',fontSize:26,fontWeight:700,marginBottom:10}}>All voted!</h2>
+      <p style={{color:C.muted,marginBottom:28,fontSize:14}}>You've voted on all dishes. Waiting for your family to finish.</p>
+      <div style={{width:'100%'}}>
+        {DISHES.map(d=>(
+          <div key={d.id} style={{display:'flex',alignItems:'center',gap:12,background:'white',borderRadius:14,padding:'12px 14px',marginBottom:8,boxShadow:'0 2px 8px rgba(0,0,0,.04)'}}>
+            <img src={d.img} alt={d.name} style={{width:46,height:46,borderRadius:10,objectFit:'cover'}}/>
+            <span style={{flex:1,fontWeight:500,fontSize:14,textAlign:'left'}}>{d.name}</span>
+            <span style={{fontSize:18}}>{votes[d.id]?'❤️':'✕'}</span>
+          </div>
+        ))}
+      </div>
+      <BottomNav active="match" go={go}/>
+    </div>
+  );
+  return(
+    <div style={{paddingBottom:100,minHeight:'100vh',background:C.bg}}>
+      <div style={{padding:'52px 20px 16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <span style={{fontFamily:'Playfair Display',fontWeight:700,fontSize:20,color:C.primary}}>Tonight's Contenders</span>
+        <div style={{width:38,height:38,borderRadius:'50%',background:'white',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(0,0,0,.08)'}}>🔔</div>
+      </div>
+      {/* Progress dots */}
+      <div style={{padding:'0 20px 18px',display:'flex',gap:5}}>
+        {DISHES.map((_,i)=><div key={i} style={{flex:1,height:3,borderRadius:2,background:i<idx?C.primary:i===idx?C.primary:'#E0D8CC',opacity:i<idx?.35:1,transition:'all .3s'}}/>)}
+      </div>
+      {/* Dish card */}
+      <div style={{padding:'0 20px',marginBottom:24}}>
+        <div style={{borderRadius:24,overflow:'hidden',background:'white',transform:anim==='left'?'translateX(-70px) rotate(-10deg)':anim==='right'?'translateX(70px) rotate(10deg)':'none',opacity:anim?0:1,transition:'all .25s cubic-bezier(.4,0,.2,1)',boxShadow:'0 10px 40px rgba(0,0,0,.13)'}}>
+          <div style={{position:'relative',height:310}}>
+            <img src={dish.img} alt={dish.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(transparent 50%,rgba(0,0,0,.72)'}}/>
+            <div style={{position:'absolute',bottom:20,left:20}}>
+              <h2 style={{fontFamily:'Playfair Display',fontSize:28,fontWeight:700,color:'white',lineHeight:1.15}}>{dish.name}</h2>
+            </div>
+          </div>
+          <div style={{padding:'16px 20px 20px'}}>
+            <div style={{display:'flex',gap:7,marginBottom:14,flexWrap:'wrap'}}>
+              {[['🔩','PROTEIN',dish.protein+'G'],['📊','CARBS',dish.carbs+'G'],['🌿','FIBER',dish.fiber+'G']].map(([ic,lb,vl])=>(
+                <div key={lb} style={{background:C.light,borderRadius:50,padding:'6px 12px',display:'flex',alignItems:'center',gap:6,fontSize:12,fontWeight:600,color:C.text}}><span>{ic}</span>{lb} {vl}</div>
+              ))}
+            </div>
+            <p style={{color:C.muted,fontSize:13.5,fontStyle:'italic',lineHeight:1.55,marginBottom:10}}>{dish.desc}</p>
+            <div className="tap" onClick={()=>showRecipe(dish)} style={{textAlign:'right',color:C.muted,fontSize:12,fontWeight:700,cursor:'pointer',letterSpacing:.8}}>VIEW RECIPE →</div>
+          </div>
+        </div>
+      </div>
+      {/* Vote buttons */}
+      <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:28,padding:'0 20px'}}>
+        <button className="vote-skip" onClick={()=>vote(false)} style={{width:66,height:66,borderRadius:'50%',background:'white',border:'none',fontSize:22,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 18px rgba(0,0,0,.1)',color:C.muted}}>✕</button>
+        <button className="vote-love" onClick={()=>vote(true)} style={{width:82,height:82,borderRadius:'50%',background:C.primary,border:'none',fontSize:30,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:`0 8px 28px rgba(123,37,37,.4)`}}>❤️</button>
+      </div>
+      <div style={{textAlign:'center',marginTop:16,color:C.muted,fontSize:12}}>{idx+1} of {DISHES.length} dishes</div>
+      <BottomNav active="match" go={go}/>
+    </div>
+  );
+};
+
+// ── PLANNER ─────────────────────────────────────────────────────────
+const PlannerScreen=({go,showRecipe})=>{
+  const[selDay,setSelDay]=useState(2);
+  const p=PLAN[selDay];
+  const hours=['7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM','9 PM'];
+  return(
+    <div className="fade-in" style={{paddingBottom:100,minHeight:'100vh',background:C.bg}}>
+      <div style={{padding:'52px 20px 16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <h1 style={{fontFamily:'Playfair Display',fontWeight:700,fontSize:22}}>Meal Plan</h1>
+        <div style={{display:'flex',gap:8}}>
+          <div style={{width:38,height:38,borderRadius:'50%',background:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:17,cursor:'pointer',boxShadow:'0 2px 8px rgba(0,0,0,.07)'}}>🛒</div>
+          <div style={{width:38,height:38,borderRadius:'50%',background:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:17,cursor:'pointer',boxShadow:'0 2px 8px rgba(0,0,0,.07)'}}>•••</div>
+        </div>
+      </div>
+      {/* Week grid */}
+      <div style={{background:'white',margin:'0 20px 14px',borderRadius:18,padding:'16px 14px',boxShadow:'0 2px 10px rgba(0,0,0,.05)'}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+          <div style={{display:'flex',alignItems:'center',gap:7}}>
+            <span style={{fontSize:15}}>📅</span>
+            <span style={{fontWeight:600,fontSize:14}}>April 2025</span>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:6,fontSize:13,color:C.muted,cursor:'pointer'}}>
+            <span>◀</span><span style={{fontWeight:600}}>Today</span><span>▶</span>
+          </div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:2}}>
+          {PLAN.map((d,i)=>(
+            <div key={d.day} onClick={()=>setSelDay(i)} style={{textAlign:'center',cursor:'pointer'}}>
+              <div style={{fontSize:10.5,color:C.muted,marginBottom:6,fontWeight:500}}>{d.day}</div>
+              <div style={{width:32,height:32,borderRadius:'50%',margin:'0 auto',background:selDay===i?C.primary:'transparent',color:selDay===i?'white':C.text,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:selDay===i?700:400,fontSize:14,transition:'all .2s'}}>{d.date}</div>
+              <div style={{width:'70%',height:3,borderRadius:2,background:d.dish?C.primary:'#E0D8CC',margin:'6px auto 0',opacity:.65}}/>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Macro strip */}
+      {p.dish&&(
+        <div style={{margin:'0 20px 14px',display:'flex',gap:8}}>
+          {[['🔥',p.dish.cal,'kcal'],['P',p.dish.protein+'g','prot'],['C',p.dish.carbs+'g','carbs'],['F',p.dish.fiber+'g','fiber']].map(([ic,v,l])=>(
+            <div key={l} style={{flex:1,background:'white',borderRadius:12,padding:'9px 6px',textAlign:'center',boxShadow:'0 1px 6px rgba(0,0,0,.04)'}}>
+              <div style={{fontSize:12,fontWeight:700}}>{ic} {v}</div>
+              <div style={{fontSize:10,color:C.muted,marginTop:2}}>{l}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      {/* Timeline */}
+      <div style={{padding:'0 20px'}}>
+        {hours.map((t,i)=>{
+          const isLunch=t==='1 PM'&&p.dish;
+          const isDinner=t==='7 PM'&&p.dish;
+          return(
+            <div key={t} style={{display:'flex',gap:10,alignItems:'flex-start',minHeight:isLunch||isDinner?90:38}}>
+              <div style={{width:46,fontSize:12,color:C.muted,paddingTop:10,flexShrink:0,textAlign:'right'}}>{t}</div>
+              <div style={{flex:1,borderLeft:`1.5px solid ${C.border}`,paddingLeft:14,paddingBottom:4,paddingTop:6}}>
+                {(isLunch||isDinner)?(
+                  <div className="tap" onClick={()=>showRecipe(p.dish)} style={{background:'white',borderRadius:14,padding:'10px 12px',display:'flex',gap:10,alignItems:'center',cursor:'pointer',boxShadow:'0 2px 10px rgba(0,0,0,.06)'}}>
+                    <img src={p.dish.img} alt="" style={{width:46,height:46,borderRadius:10,objectFit:'cover',flexShrink:0}}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontWeight:600,fontSize:13.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.dish.name}</div>
+                      <div style={{fontSize:11.5,color:C.muted,marginTop:2}}>🔥 {p.dish.cal} · {isLunch?'Lunch':'Dinner'}</div>
+                    </div>
+                    <div style={{color:C.muted,fontSize:15,cursor:'pointer',flexShrink:0}}>✏️</div>
+                  </div>
+                ):(
+                  <div style={{color:C.border,fontSize:20,cursor:'pointer',lineHeight:1,paddingTop:2}}>+</div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <BottomNav active="planner" go={go}/>
+    </div>
+  );
+};
+
+// ── IMPORT ──────────────────────────────────────────────────────────
+const ImportScreen=({go})=>{
+  const[url,setUrl]=useState('');
+  const[proc,setProc]=useState(false);
+  const[done,setDone]=useState(false);
+  const[dishName,setDishName]=useState('');
+  const[manDone,setManDone]=useState(false);
+  const process=()=>{if(!url)return;setProc(true);setTimeout(()=>{setProc(false);setDone(true);},2600);};
+  const addManual=()=>{if(dishName.trim())setManDone(true);};
+  return(
+    <div className="fade-in" style={{paddingBottom:100,minHeight:'100vh',background:C.bg}}>
+      <div style={{padding:'52px 20px 24px'}}>
+        <h1 style={{fontFamily:'Playfair Display',fontWeight:700,fontSize:24,marginBottom:4}}>Import a Dish</h1>
+        <p style={{color:C.muted,fontSize:14}}>Paste an Instagram / YouTube link, or type a dish name</p>
+      </div>
+      <div style={{padding:'0 20px'}}>
+        <div style={{background:'white',borderRadius:20,padding:'20px',marginBottom:14,boxShadow:'0 2px 10px rgba(0,0,0,.05)'}}>
+          <label style={{fontSize:12,color:C.muted,fontWeight:700,display:'block',marginBottom:10,letterSpacing:.5}}>PASTE LINK</label>
+          <textarea value={url} onChange={e=>{setUrl(e.target.value);setDone(false);}} placeholder="https://www.instagram.com/reel/...&#10;https://www.youtube.com/watch?v=..." style={{width:'100%',border:`1.5px solid ${C.border}`,borderRadius:12,padding:'12px 14px',fontSize:13.5,fontFamily:'DM Sans',outline:'none',resize:'none',height:80,color:C.text,lineHeight:1.5}}/>
+        </div>
+        {!done?(
+          <button className="tap" onClick={process} disabled={!url||proc} style={{width:'100%',padding:'15px',borderRadius:50,border:'none',background:url&&!proc?C.primary:'#D0C8BC',color:'white',fontSize:15,fontWeight:600,cursor:url?'pointer':'default',fontFamily:'DM Sans',display:'flex',alignItems:'center',justifyContent:'center',gap:10,transition:'background .2s',boxShadow:url&&!proc?`0 6px 20px rgba(123,37,37,.3)`:'none'}}>
+            {proc?<><span style={{display:'inline-block',width:18,height:18,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .7s linear infinite'}}/>Extracting dish info...</>:'Add to Pool'}
+          </button>
+        ):(
+          <div className="slide-up" style={{background:'#E8F5E9',borderRadius:18,padding:'22px',textAlign:'center',boxShadow:'0 4px 16px rgba(76,175,80,.15)'}}>
+            <div style={{fontSize:42,marginBottom:8}}>✅</div>
+            <div style={{fontWeight:700,color:'#2E7D32',marginBottom:4,fontSize:16}}>Dish added to pool!</div>
+            <div style={{color:'#4CAF50',fontSize:13}}>Your family can now vote on it in Match</div>
+          </div>
+        )}
+        <div style={{display:'flex',alignItems:'center',gap:12,margin:'24px 0'}}>
+          <div style={{flex:1,height:1,background:C.border}}/>
+          <span style={{color:C.muted,fontSize:13,fontWeight:500}}>or add manually</span>
+          <div style={{flex:1,height:1,background:C.border}}/>
+        </div>
+        {!manDone?(
+          <div style={{background:'white',borderRadius:20,padding:'20px',boxShadow:'0 2px 10px rgba(0,0,0,.05)'}}>
+            <div style={{marginBottom:14}}>
+              <label style={{fontSize:12,color:C.muted,fontWeight:700,display:'block',marginBottom:8,letterSpacing:.5}}>DISH NAME</label>
+              <input value={dishName} onChange={e=>setDishName(e.target.value)} placeholder="e.g. Chole Bhature" style={{width:'100%',border:`1.5px solid ${C.border}`,borderRadius:10,padding:'10px 14px',fontSize:14,fontFamily:'DM Sans',outline:'none',color:C.text}}/>
+            </div>
+            <div style={{marginBottom:18}}>
+              <label style={{fontSize:12,color:C.muted,fontWeight:700,display:'block',marginBottom:8,letterSpacing:.5}}>APPROX. CALORIES</label>
+              <input type="number" placeholder="350" style={{width:'100%',border:`1.5px solid ${C.border}`,borderRadius:10,padding:'10px 14px',fontSize:14,fontFamily:'DM Sans',outline:'none',color:C.text}}/>
+            </div>
+            <button className="tap" onClick={addManual} style={{width:'100%',padding:'13px',borderRadius:50,border:'none',background:C.dark,color:'white',fontSize:14,fontWeight:600,cursor:'pointer',fontFamily:'DM Sans'}}>Add Manually</button>
+          </div>
+        ):(
+          <div className="slide-up" style={{background:'#E8F5E9',borderRadius:18,padding:'22px',textAlign:'center'}}>
+            <div style={{fontSize:36,marginBottom:8}}>🍽</div>
+            <div style={{fontWeight:700,color:'#2E7D32',fontSize:15}}>{dishName} added!</div>
+          </div>
+        )}
+      </div>
+      <BottomNav active="import" go={go}/>
+    </div>
+  );
+};
+
+// ── RECIPE MODAL ────────────────────────────────────────────────────
+const RecipeModal=({dish,close})=>{
+  if(!dish)return null;
+  return(
+    <div className="slide-up" style={{position:'fixed',top:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:390,height:'100vh',background:C.bg,zIndex:200,overflowY:'auto'}}>
+      <div style={{position:'relative'}}>
+        <img src={dish.img} alt={dish.name} style={{width:'100%',height:270,objectFit:'cover'}}/>
+        <div style={{position:'absolute',inset:0,background:'linear-gradient(transparent 50%,rgba(0,0,0,.4))'}}/>
+        <button className="tap" onClick={close} style={{position:'absolute',top:52,left:20,width:40,height:40,borderRadius:'50%',background:'rgba(0,0,0,.45)',border:'none',color:'white',fontSize:17,cursor:'pointer',backdropFilter:'blur(4px)'}}>←</button>
+      </div>
+      <div style={{padding:'22px 20px 100px'}}>
+        <h1 style={{fontFamily:'Playfair Display',fontSize:26,fontWeight:700,marginBottom:10,lineHeight:1.2}}>{dish.name}</h1>
+        <p style={{color:C.muted,fontStyle:'italic',fontSize:13.5,marginBottom:16,lineHeight:1.55}}>{dish.desc}</p>
+        <div style={{display:'flex',gap:7,marginBottom:22,flexWrap:'wrap'}}>
+          {[['🔥',dish.cal+' kcal'],['💪',dish.protein+'g protein'],['🌾',dish.carbs+'g carbs'],['🌿',dish.fiber+'g fiber']].map(([ic,v])=>(
+            <span key={v} style={{background:C.light,borderRadius:50,padding:'6px 13px',fontSize:12,fontWeight:500}}>{ic} {v}</span>
+          ))}
+        </div>
+        <h3 style={{fontFamily:'Playfair Display',fontSize:18,fontWeight:700,marginBottom:12}}>Ingredients</h3>
+        <div style={{background:'white',borderRadius:18,padding:'16px 18px',marginBottom:22,boxShadow:'0 2px 10px rgba(0,0,0,.05)'}}>
+          {dish.ingredients.map((ing,i)=>(
+            <div key={i} style={{display:'flex',gap:12,padding:'9px 0',borderBottom:i<dish.ingredients.length-1?`1px solid ${C.border}`:'none',alignItems:'flex-start'}}>
+              <span style={{color:C.primary,fontWeight:800,flexShrink:0,marginTop:1}}>·</span>
+              <span style={{fontSize:14,lineHeight:1.4}}>{ing}</span>
+            </div>
+          ))}
+        </div>
+        <h3 style={{fontFamily:'Playfair Display',fontSize:18,fontWeight:700,marginBottom:14}}>How to Make</h3>
+        {dish.steps.map((step,i)=>(
+          <div key={i} style={{display:'flex',gap:12,marginBottom:14,alignItems:'flex-start'}}>
+            <div style={{width:28,height:28,borderRadius:'50%',background:C.primary,color:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,flexShrink:0}}>{i+1}</div>
+            <p style={{fontSize:14,lineHeight:1.65,paddingTop:4,color:C.text}}>{step}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ── ROOT APP ─────────────────────────────────────────────────────────
+const App=()=>{
+  const[screen,setScreen]=useState('welcome');
+  const[recipe,setRecipe]=useState(null);
+  const go=s=>{
+    const map={hearth:'hearth',import:'import',match:'match',planner:'planner'};
+    setScreen(map[s]||s);
+    window.scrollTo(0,0);
+  };
+  const screens={
+    welcome:<WelcomeScreen go={go}/>,
+    onboarding1:<Onboarding1 go={go}/>,
+    onboarding2:<Onboarding2 go={go}/>,
+    createjoin:<CreateJoinScreen go={go}/>,
+    hearth:<HearthScreen go={go} showRecipe={setRecipe}/>,
+    match:<MatchScreen go={go} showRecipe={setRecipe}/>,
+    planner:<PlannerScreen go={go} showRecipe={setRecipe}/>,
+    import:<ImportScreen go={go}/>,
+  };
+  return(
+    <>
+      {screens[screen]||screens.welcome}
+      {recipe&&<RecipeModal dish={recipe} close={()=>setRecipe(null)}/>}
+    </>
+  );
+};
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
