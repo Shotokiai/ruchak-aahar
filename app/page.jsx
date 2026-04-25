@@ -32,6 +32,38 @@ const MatchIcon = ({ a }) => <svg width="22" height="22" viewBox="0 0 24 24" fil
 const PlanIcon = ({ a }) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke={a ? C.primary : C.muted} strokeWidth="2" /><path d="M16 2V6M8 2V6M3 10H21" stroke={a ? C.primary : C.muted} strokeWidth="2" strokeLinecap="round" /><circle cx="8" cy="15" r="1.5" fill={a ? C.primary : C.muted} /><circle cx="12" cy="15" r="1.5" fill={a ? C.primary : C.muted} /></svg>;
 const GoogleG = () => <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" /><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" /><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" /><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" /></svg>;
 
+const MenuIcon = () => (
+  <svg width="20" height="14" viewBox="0 0 20 14" fill={C.dark}>
+    <rect width="20" height="2.5" rx="1.25"/><rect y="5.75" width="20" height="2.5" rx="1.25"/><rect y="11.5" width="20" height="2.5" rx="1.25"/>
+  </svg>
+);
+const BellIcon = ({ filled }) => filled ? (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill={C.dark}>
+    <path d="M12 2a1.5 1.5 0 0 0-1.5 1.5v.74C7.57 5.04 6 7.34 6 10v5l-2 2.67V19h16v-1.33L18 15v-5c0-2.66-1.57-4.96-4.5-5.76V3.5A1.5 1.5 0 0 0 12 2z"/>
+    <path d="M10 20a2 2 0 0 0 4 0h-4z"/>
+    <path d="M4 8.5C3.2 9.6 2.8 11 3 12.3" stroke={C.dark} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+    <path d="M20 8.5c.8 1.1 1.2 2.5 1 3.8" stroke={C.dark} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+  </svg>
+) : (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.dark} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2a1.5 1.5 0 0 0-1.5 1.5v.74C7.57 5.04 6 7.34 6 10v5l-2 2.67V19h16v-1.33L18 15v-5c0-2.66-1.57-4.96-4.5-5.76V3.5A1.5 1.5 0 0 0 12 2z"/>
+    <path d="M10 20a2 2 0 0 0 4 0"/>
+    <path d="M4 8.5C3.2 9.6 2.8 11 3 12.3"/>
+    <path d="M20 8.5c.8 1.1 1.2 2.5 1 3.8"/>
+  </svg>
+);
+const CopyIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+  </svg>
+);
+const WhatsAppIcon = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.43 12.43 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.527 5.845L.057 23.012a.75.75 0 0 0 .931.931l5.167-1.47A11.93 11.93 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.85 0-3.58-.5-5.07-1.37l-.36-.21-3.74 1.065 1.065-3.738-.213-.363A9.934 9.934 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+  </svg>
+);
+
 /* ── Bottom Nav ── */
 const BottomNav = ({ active, go }) => (
   <div style={{ position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 390, background: 'white', borderTop: `1px solid ${C.border}`, padding: '12px 8px 22px', display: 'flex', justifyContent: 'space-around', zIndex: 100, boxShadow: '0 -4px 20px rgba(0,0,0,.06)' }}>
@@ -237,7 +269,21 @@ const Onboarding3 = ({ go, profile, setProfile }) => {
           <div style={{ fontSize: 13, color: C.muted }}>Your daily target</div>
           <div style={{ fontFamily: 'Playfair Display', fontSize: 18, fontWeight: 700, color: C.primary }}>{target} kcal</div>
         </div>
-        <button className="tap" onClick={() => { setProfile(p => ({ ...p, activity, bodyGoal, maintenance, target })); go('createjoin'); }} style={{ width: '100%', padding: '15px', borderRadius: 50, border: 'none', background: C.primary, color: 'white', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>Complete Setup →</button>
+        <button className="tap" onClick={async () => {
+          setProfile(p => ({ ...p, activity, bodyGoal, maintenance, target }));
+          try {
+            await fetch('/api/profile', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                age: profile.age, weight_kg: profile.weightKg, height_cm: profile.heightCm,
+                food_pref: profile.pref, allergies: profile.allergies,
+                activity_level: activity, body_goal: bodyGoal,
+              }),
+            });
+          } catch (_) {}
+          go('createjoin');
+        }} style={{ width: '100%', padding: '15px', borderRadius: 50, border: 'none', background: C.primary, color: 'white', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>Complete Setup →</button>
       </div>
     </div>
   );
@@ -268,11 +314,41 @@ const JoinCodeScreen = ({ go }) => {
   );
 };
 
+const INVITE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const makeLocalCode = () => Array.from({ length: 6 }, () => INVITE_CHARS[Math.floor(Math.random() * INVITE_CHARS.length)]).join('');
+
 /* ══ CREATE/JOIN ══ */
-const CreateJoinScreen = ({ go, userName }) => {
+const CreateJoinScreen = ({ go, userName, onRoomCreated }) => {
   const [mode, setMode] = useState(null);
   const [roomName, setRoomName] = useState('');
+  const [localCode, setLocalCode] = useState('');
   const [copied, setCopied] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleRoomNameChange = e => {
+    setRoomName(e.target.value);
+    if (!localCode && e.target.value.length > 1) setLocalCode(makeLocalCode());
+  };
+
+  const handleCreate = async () => {
+    if (roomName.length < 2 || creating) return;
+    setCreating(true); setError('');
+    try {
+      const res = await fetch('/api/rooms/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: roomName, suggestedCode: localCode }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error || 'Failed to create room'); setCreating(false); return; }
+      onRoomCreated(data.roomId, data.inviteCode, data.roomName);
+    } catch (e) {
+      setError('Network error. Please try again.');
+      setCreating(false);
+    }
+  };
+
   if (mode === 'create') return (
     <div className="slide-up" style={{ padding: '52px 24px 40px', minHeight: '100vh', background: C.bg }}>
       <div className="tap" onClick={() => setMode(null)} style={{ width: 38, height: 38, borderRadius: '50%', background: '#E8DDD0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', marginBottom: 22, fontSize: 16 }}>←</div>
@@ -280,19 +356,22 @@ const CreateJoinScreen = ({ go, userName }) => {
       <p style={{ color: C.muted, marginBottom: 22, fontSize: 14 }}>Name your hearth and invite your family</p>
       <div style={{ background: 'white', borderRadius: 18, padding: '16px 20px', marginBottom: 12 }}>
         <label style={{ fontSize: 12, color: C.muted, fontWeight: 700, display: 'block', marginBottom: 7, letterSpacing: .5 }}>FAMILY ROOM NAME</label>
-        <input value={roomName} onChange={e => setRoomName(e.target.value)} placeholder="e.g. Sharma Family" style={{ width: '100%', border: 'none', outline: 'none', fontSize: 16, fontFamily: 'DM Sans', color: C.text, background: 'transparent' }} />
+        <input value={roomName} onChange={handleRoomNameChange} placeholder="e.g. Sharma Family" style={{ width: '100%', border: 'none', outline: 'none', fontSize: 16, fontFamily: 'DM Sans', color: C.text, background: 'transparent' }} />
       </div>
-      {roomName.length > 1 && (
+      {roomName.length > 1 && localCode && (
         <div style={{ background: 'white', borderRadius: 18, padding: '16px 20px', marginBottom: 22 }}>
           <div style={{ fontSize: 11, color: C.muted, fontWeight: 700, marginBottom: 8, letterSpacing: .5 }}>YOUR INVITE CODE</div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontFamily: 'Playfair Display', fontSize: 34, fontWeight: 700, letterSpacing: 6, color: C.primary }}>DISH42</span>
-            <button onClick={() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }} style={{ padding: '8px 16px', borderRadius: 20, background: copied ? '#4CAF50' : C.dark, color: 'white', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, transition: 'background .3s' }}>{copied ? '✓ Copied' : 'Copy'}</button>
+            <span style={{ fontFamily: 'Playfair Display', fontSize: 34, fontWeight: 700, letterSpacing: 6, color: C.primary }}>{localCode}</span>
+            <button onClick={() => { navigator.clipboard?.writeText(localCode); setCopied(true); setTimeout(() => setCopied(false), 2000); }} style={{ padding: '8px 16px', borderRadius: 20, background: copied ? '#4CAF50' : C.dark, color: 'white', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, transition: 'background .3s' }}>{copied ? '✓ Copied' : 'Copy'}</button>
           </div>
-          <p style={{ fontSize: 12, color: C.muted, marginTop: 7 }}>Share this with your family to invite them</p>
+          <p style={{ fontSize: 12, color: C.muted, marginTop: 7 }}>Share this code with your family to invite them</p>
         </div>
       )}
-      <button className="tap" onClick={() => go('hearth')} style={{ width: '100%', padding: '15px', borderRadius: 50, border: 'none', background: roomName.length > 1 ? C.primary : '#D0C8BC', color: 'white', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>Create Room & Continue</button>
+      {error && <p style={{ color: '#E53935', fontSize: 13, marginBottom: 10, textAlign: 'center' }}>{error}</p>}
+      <button className="tap" onClick={handleCreate} disabled={creating} style={{ width: '100%', padding: '15px', borderRadius: 50, border: 'none', background: roomName.length > 1 && !creating ? C.primary : '#D0C8BC', color: 'white', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>
+        {creating ? 'Creating…' : 'Create Room & Continue'}
+      </button>
     </div>
   );
   return (
@@ -331,7 +410,7 @@ const MemberMenuModal = ({ member, isAdmin, allMembers, onClose, onToggleEating,
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.4)', zIndex: 150 }} />
-      <div className="slide-up" style={{ position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 390, background: 'white', borderRadius: '22px 22px 0 0', padding: '14px 20px 36px', zIndex: 160 }}>
+      <div className="slide-up" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, margin: '0 auto', width: '100%', maxWidth: 390, background: 'white', borderRadius: '22px 22px 0 0', padding: '14px 20px 36px', zIndex: 160 }}>
         <div style={{ width: 38, height: 4, borderRadius: 2, background: '#E0D8CC', margin: '0 auto 14px' }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
           <div style={{ width: 44, height: 44, borderRadius: '50%', background: member.color || '#D4956A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 700, color: 'white' }}>{member.initials}</div>
@@ -378,17 +457,58 @@ const MemberMenuModal = ({ member, isAdmin, allMembers, onClose, onToggleEating,
 };
 
 /* ══ PROFILE SCREEN ══ */
-const ProfileScreen = ({ go, profile, setProfile }) => {
+const ProfileScreen = ({ go, profile, setProfile, session }) => {
   const [editMode, setEditMode] = useState(null);
-  const [activity, setActivity] = useState(profile?.activity || 'sedentary');
-  const [bodyGoal, setBodyGoal] = useState(profile?.bodyGoal || 'fit');
-  
+  const [editAge, setEditAge] = useState(25);
+  const [editWeight, setEditWeight] = useState(70);
+  const [editHeight, setEditHeight] = useState(170);
+  const [editActivity, setEditActivity] = useState('sedentary');
+  const [editBodyGoal, setEditBodyGoal] = useState('fit');
+  const [editPref, setEditPref] = useState('nonveg');
+  const [editAllergies, setEditAllergies] = useState([]);
+
+  const openEdit = mode => {
+    if (mode === 'body') { setEditAge(profile?.age || 25); setEditWeight(profile?.weightKg || 70); setEditHeight(profile?.heightCm || 170); }
+    if (mode === 'fitness') { setEditActivity(profile?.activity || 'sedentary'); setEditBodyGoal(profile?.bodyGoal || 'fit'); }
+    if (mode === 'food') { setEditPref(profile?.pref || 'nonveg'); setEditAllergies(profile?.allergies || []); }
+    setEditMode(mode);
+  };
+
+  const toggleAllergyEdit = id => {
+    if (id === 'none') { setEditAllergies(['none']); return; }
+    setEditAllergies(a => { const n = a.filter(x => x !== 'none'); return n.includes(id) ? n.filter(x => x !== id) : [...n, id]; });
+  };
+
+  const bodyChanged = editAge !== (profile?.age || 25) || editWeight !== (profile?.weightKg || 70) || editHeight !== (profile?.heightCm || 170);
+  const fitnessChanged = editActivity !== (profile?.activity || 'sedentary') || editBodyGoal !== (profile?.bodyGoal || 'fit');
+  const foodChanged = editPref !== (profile?.pref || 'nonveg') ||
+    JSON.stringify([...(editAllergies)].sort()) !== JSON.stringify([...(profile?.allergies || [])].sort());
+  const hasChanged = editMode === 'body' ? bodyChanged : editMode === 'fitness' ? fitnessChanged : foodChanged;
+
+  const saveChanges = async () => {
+    const apiBody = {};
+    if (editMode === 'body') {
+      apiBody.age = editAge; apiBody.weight_kg = editWeight; apiBody.height_cm = editHeight;
+      setProfile(p => ({ ...p, age: editAge, weightKg: editWeight, heightCm: editHeight }));
+    }
+    if (editMode === 'fitness') {
+      apiBody.activity_level = editActivity; apiBody.body_goal = editBodyGoal;
+      setProfile(p => ({ ...p, activity: editActivity, bodyGoal: editBodyGoal }));
+    }
+    if (editMode === 'food') {
+      apiBody.food_pref = editPref; apiBody.allergies = editAllergies;
+      setProfile(p => ({ ...p, pref: editPref, allergies: editAllergies }));
+    }
+    setEditMode(null);
+    try { await fetch('/api/profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(apiBody) }); } catch (_) {}
+  };
+
   const age = profile?.age || (profile?.dob ? Math.floor((new Date() - new Date(profile.dob)) / (365.25 * 24 * 60 * 60 * 1000)) : null);
   const PREF_LABEL = { veg: 'Vegetarian 🥗', nonveg: 'Non-Vegetarian 🍗', vegan: 'Vegan 🥑' };
   const ACTIVITY_LABEL = { sedentary: 'Sedentary 🪑', light: 'Light Activity 🚶', moderate: 'Moderate 🏋️' };
   const GOAL_LABEL = { lean: 'Lean — Lose fat', fit: 'Fit — Stay toned', athletic: 'Athletic — Build muscle' };
   
-  const Row = ({ label, value }) => <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 0', borderBottom: `1px solid ${C.border}` }}><span style={{ fontSize: 13.5, color: C.muted }}>{label}</span><span style={{ fontSize: 14, fontWeight: 600, color: C.text }}>{value ?? '—'}</span></div>;
+  const Row = ({ label, value, last }) => <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 0', borderBottom: last ? 'none' : `1px solid ${C.border}` }}><span style={{ fontSize: 13.5, color: C.muted }}>{label}</span><span style={{ fontSize: 14, fontWeight: 600, color: C.text }}>{value ?? '—'}</span></div>;
   const Section = ({ title, onEdit, children }) => (
     <div style={{ background: 'white', borderRadius: 20, padding: '6px 18px', marginBottom: 14, boxShadow: '0 2px 10px rgba(0,0,0,.05)' }}>
       <div style={{ display: 'flex', alignItems: 'center', padding: '14px 0 4px' }}>
@@ -415,42 +535,44 @@ const ProfileScreen = ({ go, profile, setProfile }) => {
         {/* Identity card */}
         <div style={{ background: 'white', borderRadius: 24, padding: '22px 20px', marginBottom: 14, boxShadow: '0 4px 20px rgba(0,0,0,.07)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div style={{ width: 72, height: 72, borderRadius: '50%', overflow: 'hidden', border: `3px solid ${C.primary}`, background: C.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, color: 'white', fontWeight: 700 }}>👤</div>
+            <div style={{ width: 72, height: 72, borderRadius: '50%', overflow: 'hidden', border: `3px solid ${C.primary}`, background: C.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, color: 'white', fontWeight: 700, flexShrink: 0 }}>
+              {session?.user?.image ? <img src={session.user.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : '👤'}
+            </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: 'Playfair Display', fontSize: 19, fontWeight: 700, marginBottom: 3 }}>Chef</div>
-              <div style={{ fontSize: 12.5, color: C.muted, marginBottom: 4 }}>user@culinary.app</div>
+              <div style={{ fontFamily: 'Playfair Display', fontSize: 19, fontWeight: 700, marginBottom: 3 }}>{session?.user?.name || 'Chef'}</div>
+              <div style={{ fontSize: 12.5, color: C.muted, marginBottom: 4 }}>{session?.user?.email || ''}</div>
               {age && <div style={{ fontSize: 11.5, color: C.muted }}>🎂 {age} years old</div>}
             </div>
           </div>
         </div>
 
         {/* Body metrics */}
-        <Section title="BODY METRICS" onEdit={() => setEditMode('body')}>
+        <Section title="BODY METRICS" onEdit={() => openEdit('body')}>
           <Row label="Age" value={age != null ? `${age} years` : '—'} />
           <Row label="Weight" value={profile?.weightKg ? `${profile.weightKg} kg` : '—'} />
-          <Row label="Height" value={profile?.heightCm ? `${profile.heightCm} cm` : '—'} />
+          <Row label="Height" value={profile?.heightCm ? `${profile.heightCm} cm` : '—'} last />
         </Section>
 
         {/* Food preferences */}
-        <Section title="FOOD PREFERENCES" onEdit={() => setEditMode('food')}>
+        <Section title="FOOD PREFERENCES" onEdit={() => openEdit('food')}>
           <Row label="Diet type" value={PREF_LABEL[profile?.pref] || '—'} />
-          <Row label="Allergies" value={profile?.allergies?.length ? profile.allergies.join(', ') : 'None'} />
+          <Row label="Allergies" value={profile?.allergies?.length ? profile.allergies.join(', ') : 'None'} last />
         </Section>
 
         {/* Fitness & goals */}
-        <Section title="FITNESS & GOALS" onEdit={() => setEditMode('fitness')}>
+        <Section title="FITNESS & GOALS" onEdit={() => openEdit('fitness')}>
           <Row label="Activity level" value={ACTIVITY_LABEL[profile?.activity] || '—'} />
           <Row label="Body goal" value={GOAL_LABEL[profile?.bodyGoal] || '—'} />
-          <Row label="Maintenance" value={profile?.maintenance ? `${profile.maintenance} kcal/day` : '—'} />
+          <Row label="Maintenance" value={profile?.maintenance ? `${profile.maintenance} kcal/day` : '—'} last />
         </Section>
 
         {/* Help & Support */}
         <a href="https://wa.me/919136906129" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block', marginBottom: 14 }}>
-          <div style={{ background: '#25D366', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 16, boxShadow: '0 4px 18px rgba(37,211,102,.3)' }}>
-            <div style={{ width: 46, height: 46, borderRadius: '50%', background: 'rgba(255,255,255,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 20 }}>💬</div>
+          <div style={{ background: '#075E54', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 16, boxShadow: '0 4px 18px rgba(7,94,84,.4)' }}>
+            <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><WhatsAppIcon size={40} /></div>
             <div style={{ flex: 1 }}>
               <div style={{ color: 'white', fontWeight: 700, fontSize: 15, marginBottom: 2 }}>WhatsApp Support</div>
-              <div style={{ color: 'rgba(255,255,255,.8)', fontSize: 12.5 }}>Tap to chat with us directly</div>
+              <div style={{ color: 'rgba(255,255,255,.75)', fontSize: 12.5 }}>Tap to chat with us directly</div>
             </div>
             <div style={{ color: 'white', fontSize: 18, opacity: 0.7 }}>→</div>
           </div>
@@ -467,33 +589,41 @@ const ProfileScreen = ({ go, profile, setProfile }) => {
       {editMode && (
         <>
           <div onClick={() => setEditMode(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.45)', zIndex: 200 }} />
-          <div className="slide-up" style={{ position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 390, background: 'white', borderRadius: '22px 22px 0 0', padding: '14px 20px 38px', zIndex: 210, maxHeight: '85vh', overflowY: 'auto' }}>
+          <div className="slide-up" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, margin: '0 auto', width: '100%', maxWidth: 390, background: 'white', borderRadius: '22px 22px 0 0', padding: '14px 20px 38px', zIndex: 210, maxHeight: '85vh', overflowY: 'auto' }}>
             <div style={{ width: 38, height: 4, borderRadius: 2, background: C.border, margin: '0 auto 14px' }} />
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
               <div style={{ flex: 1, fontFamily: 'Playfair Display', fontWeight: 700, fontSize: 18 }}>{editMode === 'body' ? 'Body Metrics' : editMode === 'food' ? 'Food Preferences' : 'Fitness & Goals'}</div>
               <div onClick={() => setEditMode(null)} style={{ cursor: 'pointer', color: C.muted, fontSize: 22 }}>×</div>
             </div>
 
+            {editMode === 'body' && (
+              <div style={{ marginBottom: 16 }}>
+                <SliderCard label="Age" val={editAge} set={setEditAge} min={13} max={80} lo="13 yrs" hi="80 yrs" display={`${editAge} yrs`} />
+                <SliderCard label="Body weight" val={editWeight} set={setEditWeight} min={30} max={150} lo="30 kg" hi="150 kg" display={`${editWeight} kg`} />
+                <SliderCard label="Height" val={editHeight} set={setEditHeight} min={130} max={220} lo="130 cm" hi="220 cm" display={`${editHeight} cm`} />
+              </div>
+            )}
+
             {editMode === 'fitness' && (
               <>
                 <div style={{ marginBottom: 16 }}>
                   {[{ id: 'sedentary', icon: '🪑', label: 'Sedentary', sub: 'Little or no exercise' }, { id: 'light', icon: '🚶', label: 'Light Activity', sub: '2–3 days/week' }, { id: 'moderate', icon: '🏋️', label: 'Moderate', sub: '4–5 days/week workout' }].map(o => (
-                    <div key={o.id} className="tap" onClick={() => setActivity(o.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'white', borderRadius: 14, padding: '13px 16px', marginBottom: 9, cursor: 'pointer', border: `2px solid ${activity === o.id ? C.primary : C.border}`, transition: 'border .2s' }}>
+                    <div key={o.id} className="tap" onClick={() => setEditActivity(o.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'white', borderRadius: 14, padding: '13px 16px', marginBottom: 9, cursor: 'pointer', border: `2px solid ${editActivity === o.id ? C.primary : C.border}`, transition: 'border .2s' }}>
                       <span style={{ fontSize: 22 }}>{o.icon}</span>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, fontSize: 14, color: activity === o.id ? C.primary : C.text }}>{o.label}</div>
+                        <div style={{ fontWeight: 600, fontSize: 14, color: editActivity === o.id ? C.primary : C.text }}>{o.label}</div>
                         <div style={{ fontSize: 12, color: C.muted }}>{o.sub}</div>
                       </div>
-                      {activity === o.id && <span style={{ color: C.primary, fontWeight: 700 }}>✓</span>}
+                      {editActivity === o.id && <span style={{ color: C.primary, fontWeight: 700 }}>✓</span>}
                     </div>
                   ))}
                 </div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: C.muted, marginBottom: 10, letterSpacing: 0.4 }}>BODY GOAL</div>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
                   {[{ id: 'lean', label: 'Lean', sub: 'Lose fat' }, { id: 'fit', label: 'Fit', sub: 'Stay toned' }, { id: 'athletic', label: 'Athletic', sub: 'Build muscle' }].map(o => (
-                    <div key={o.id} className="tap" onClick={() => setBodyGoal(o.id)} style={{ flex: 1, background: bodyGoal === o.id ? C.primary : C.light, borderRadius: 14, padding: '12px 8px', textAlign: 'center', cursor: 'pointer', transition: 'background .2s' }}>
-                      <div style={{ fontWeight: 700, fontSize: 13, color: bodyGoal === o.id ? 'white' : C.text }}>{o.label}</div>
-                      <div style={{ fontSize: 11, color: bodyGoal === o.id ? 'rgba(255,255,255,.75)' : C.muted, marginTop: 2 }}>{o.sub}</div>
+                    <div key={o.id} className="tap" onClick={() => setEditBodyGoal(o.id)} style={{ flex: 1, background: editBodyGoal === o.id ? C.primary : C.light, borderRadius: 14, padding: '12px 8px', textAlign: 'center', cursor: 'pointer', transition: 'background .2s' }}>
+                      <div style={{ fontWeight: 700, fontSize: 13, color: editBodyGoal === o.id ? 'white' : C.text }}>{o.label}</div>
+                      <div style={{ fontSize: 11, color: editBodyGoal === o.id ? 'rgba(255,255,255,.75)' : C.muted, marginTop: 2 }}>{o.sub}</div>
                     </div>
                   ))}
                 </div>
@@ -502,37 +632,33 @@ const ProfileScreen = ({ go, profile, setProfile }) => {
 
             {editMode === 'food' && (
               <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: 0.5, marginBottom: 10 }}>DIET TYPE</div>
                 {[{ id: 'veg', emoji: '🥗', label: 'Vegetarian', desc: 'Plant-based including dairy' }, { id: 'nonveg', emoji: '🍗', label: 'Non-Vegetarian', desc: 'Meat, poultry, seafood' }, { id: 'vegan', emoji: '🥑', label: 'Vegan', desc: 'Strict plant-based' }].map(o => (
-                  <div key={o.id} className="tap" onClick={() => setProfile(p => ({ ...p, pref: o.id }))} style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'white', borderRadius: 14, padding: '12px 16px', marginBottom: 8, cursor: 'pointer', border: `2px solid ${profile?.pref === o.id ? C.primary : C.border}`, transition: 'border .2s' }}>
+                  <div key={o.id} className="tap" onClick={() => setEditPref(o.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'white', borderRadius: 14, padding: '12px 16px', marginBottom: 8, cursor: 'pointer', border: `2px solid ${editPref === o.id ? C.primary : C.border}`, transition: 'border .2s' }}>
                     <span style={{ fontSize: 22 }}>{o.emoji}</span>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600, fontSize: 14, color: profile?.pref === o.id ? C.primary : C.text }}>{o.label}</div>
+                      <div style={{ fontWeight: 600, fontSize: 14, color: editPref === o.id ? C.primary : C.text }}>{o.label}</div>
                       <div style={{ fontSize: 12, color: C.muted }}>{o.desc}</div>
                     </div>
-                    {profile?.pref === o.id && <span style={{ color: C.primary, fontWeight: 700 }}>✓</span>}
+                    {editPref === o.id && <span style={{ color: C.primary, fontWeight: 700 }}>✓</span>}
                   </div>
                 ))}
-              </div>
-            )}
-
-            {editMode === 'body' && (
-              <div style={{ marginBottom: 16 }}>
-                <div style={{ background: 'white', borderRadius: 14, padding: '12px 14px', marginBottom: 12 }}>
-                  <label style={{ fontSize: 11, color: C.muted, fontWeight: 700, display: 'block', marginBottom: 6, letterSpacing: 0.4 }}>AGE</label>
-                  <div style={{ fontFamily: 'Playfair Display', fontSize: 20, fontWeight: 700, color: C.primary }}>{age || '—'} yrs</div>
-                </div>
-                <div style={{ background: 'white', borderRadius: 14, padding: '12px 14px', marginBottom: 12 }}>
-                  <label style={{ fontSize: 11, color: C.muted, fontWeight: 700, display: 'block', marginBottom: 6, letterSpacing: 0.4 }}>WEIGHT (KG)</label>
-                  <input type="number" value={profile?.weightKg || ''} onChange={e => setProfile(p => ({ ...p, weightKg: +e.target.value }))} style={{ width: '100%', border: 'none', outline: 'none', fontSize: 16, fontFamily: 'Playfair Display', fontWeight: 700, color: C.primary, background: 'transparent' }} />
-                </div>
-                <div style={{ background: 'white', borderRadius: 14, padding: '12px 14px' }}>
-                  <label style={{ fontSize: 11, color: C.muted, fontWeight: 700, display: 'block', marginBottom: 6, letterSpacing: 0.4 }}>HEIGHT (CM)</label>
-                  <input type="number" value={profile?.heightCm || ''} onChange={e => setProfile(p => ({ ...p, heightCm: +e.target.value }))} style={{ width: '100%', border: 'none', outline: 'none', fontSize: 16, fontFamily: 'Playfair Display', fontWeight: 700, color: C.primary, background: 'transparent' }} />
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: 0.5, margin: '16px 0 10px' }}>FOOD ALLERGIES</div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                  {[{ id: 'dairy', label: 'Dairy 🥛', sub: 'Milk, cheese, butter' }, { id: 'gluten', label: 'Gluten 🌾', sub: 'Wheat, rye, barley' }, { id: 'nuts', label: 'Tree Nuts 🥜', sub: 'Almonds, walnuts' }, { id: 'eggs', label: 'Eggs 🥚', sub: 'All egg products' }, { id: 'shellfish', label: 'Shellfish 🦐', sub: 'Shrimp, crab, lobster' }, { id: 'soy', label: 'Soy 🫘', sub: 'Tofu, edamame' }, { id: 'fish', label: 'Fish 🐟', sub: 'All fish varieties' }, { id: 'none', label: 'No Allergies ✅', sub: 'I can eat everything' }].map(o => {
+                    const sel = editAllergies.includes(o.id);
+                    return (
+                      <div key={o.id} className="tap" onClick={() => toggleAllergyEdit(o.id)} style={{ background: sel ? '#FDF5F0' : 'white', borderRadius: 14, padding: '10px 12px', cursor: 'pointer', border: `2px solid ${sel ? C.primary : 'transparent'}`, transition: 'all .2s' }}>
+                        <div style={{ fontWeight: 600, fontSize: 13, color: sel ? C.primary : C.text, marginBottom: 2 }}>{o.label}</div>
+                        <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.35 }}>{o.sub}</div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
-            <button className="tap" onClick={() => setEditMode(null)} style={{ width: '100%', padding: '14px', borderRadius: 50, border: 'none', background: C.primary, color: 'white', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>
+            <button className="tap" onClick={saveChanges} disabled={!hasChanged} style={{ width: '100%', padding: '14px', borderRadius: 50, border: 'none', background: hasChanged ? C.primary : '#D0C8BC', color: 'white', fontSize: 15, fontWeight: 600, cursor: hasChanged ? 'pointer' : 'default', fontFamily: 'DM Sans', transition: 'background .2s' }}>
               Save Changes
             </button>
           </div>
@@ -581,8 +707,22 @@ const NotificationsScreen = ({ go, dishPool }) => {
 };
 
 /* ══ HEARTH ══ */
-const HearthScreen = ({ go, showRecipe, profile, members, setMembers, plannedMeals }) => {
+const HearthScreen = ({ go, showRecipe, profile, members, setMembers, plannedMeals, inviteCode, roomName, hasNotif }) => {
   const [memberMenu, setMemberMenu] = useState(null);
+  const [navCopied, setNavCopied] = useState(false);
+
+  const handleAddMember = async () => {
+    const code = inviteCode || '——';
+    const userName = members[0]?.name || 'A friend';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+    const text = `Hey, ${userName} here!\n\nI've just joined Ruchak Aadhar and wanted to invite you to join the family pool so we can curate and create multiple dishes together.\n\nUse this invite code: ${code}\nDownload & open the app: ${appUrl}`;
+    if (navigator.share) {
+      try { await navigator.share({ title: 'Join me on Ruchak Aahar', text }); } catch (_) {}
+    } else {
+      await navigator.clipboard?.writeText(text);
+      alert('Invite message copied to clipboard!');
+    }
+  };
   const target = profile?.target || 2000;
   const ate = 0, burned = 0, remain = target;
   const pct = Math.max(ate / target, .04);
@@ -595,10 +735,22 @@ const HearthScreen = ({ go, showRecipe, profile, members, setMembers, plannedMea
     <div style={{ paddingBottom: 100, minHeight: '100vh', background: C.bg }}>
       <StickyNav
         left={<div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div className="tap" onClick={() => go('profile')} style={{ width: 36, height: 36, borderRadius: '50%', background: C.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, cursor: 'pointer' }}>👤</div>
-          <div><div style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: 15, color: C.primary }}>The Culinary Hearth</div><div style={{ fontSize: 11, color: C.muted }}>Code: DISH42</div></div>
+          <div className="tap" onClick={() => go('profile')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, padding: '4px 6px 4px 0' }}>
+            <MenuIcon />
+          </div>
+          <div>
+            <div style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: 15, color: C.primary, lineHeight: 1.3 }}>{roomName || 'The Culinary Hearth'}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: C.muted, marginTop: 2 }}>
+              <span>Code: {inviteCode || '——'}</span>
+              {inviteCode && (
+                <span onClick={e => { e.stopPropagation(); navigator.clipboard?.writeText(inviteCode); setNavCopied(true); setTimeout(() => setNavCopied(false), 1800); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', color: navCopied ? C.green : C.primary }}>
+                  {navCopied ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg> : <CopyIcon />}
+                </span>
+              )}
+            </div>
+          </div>
         </div>}
-        right={<div className="tap" onClick={() => go('notifications')} style={{ width: 36, height: 36, borderRadius: '50%', background: C.light, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 16 }}>🔔</div>}
+        right={<div className="tap" onClick={() => go('notifications')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: '6px' }}><BellIcon filled={!!hasNotif} /></div>}
       />
       <div style={{ padding: '14px 20px 0' }}>
         {/* Search */}
@@ -647,14 +799,16 @@ const HearthScreen = ({ go, showRecipe, profile, members, setMembers, plannedMea
             <div key={m.id} style={{ background: 'white', borderRadius: 18, padding: '14px', textAlign: 'center', position: 'relative' }}>
               <div onClick={() => setMemberMenu(m)} style={{ position: 'absolute', top: 10, right: 10, cursor: 'pointer', fontSize: 13, color: C.muted, fontWeight: 900, letterSpacing: .5, padding: '2px 4px' }}>•••</div>
               <div style={{ position: 'relative', display: 'inline-block', marginBottom: 7 }}>
-                <div style={{ width: 48, height: 48, borderRadius: '50%', background: m.color || '#D4956A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 700, color: 'white', fontFamily: 'Playfair Display' }}>{m.initials}</div>
+                <div style={{ width: 48, height: 48, borderRadius: '50%', background: m.color || '#D4956A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 700, color: 'white', fontFamily: 'Playfair Display', overflow: 'hidden' }}>
+                  {m.avatar_url ? <img src={m.avatar_url} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : m.initials}
+                </div>
                 <div style={{ position: 'absolute', bottom: 1, right: 1, width: 12, height: 12, borderRadius: '50%', background: m.eating ? C.green : '#F44336', border: '2px solid white' }} />
               </div>
               <div style={{ fontWeight: 600, fontSize: 13.5 }}>{m.name}</div>
               {m.isCook && <div style={{ fontSize: 10, color: C.primary, fontWeight: 700, marginTop: 2, letterSpacing: .3 }}>COOKING TONIGHT</div>}
             </div>
           ))}
-          <div className="tap" style={{ background: 'white', borderRadius: 18, padding: '14px', textAlign: 'center', border: `2px dashed ${C.border}`, cursor: 'pointer' }}>
+          <div className="tap" onClick={handleAddMember} style={{ background: 'white', borderRadius: 18, padding: '14px', textAlign: 'center', border: `2px dashed ${C.border}`, cursor: 'pointer' }}>
             <div style={{ width: 48, height: 48, borderRadius: '50%', background: C.light, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, margin: '0 auto 7px', color: C.muted }}>+</div>
             <div style={{ fontWeight: 600, fontSize: 13, color: C.text }}>Add Member</div>
             <div style={{ fontSize: 10, color: C.muted, marginTop: 2, letterSpacing: .3 }}>GROW THE GROUP</div>
@@ -784,30 +938,85 @@ const MatchScreen = ({ go, showRecipe, dishPool, votes, onVote, profile, setPlan
 };
 
 /* ══ ADD DISH MODAL ══ */
-const AddDishModal = ({ onAdd, onClose }) => {
+const AddDishModal = ({ onAdd, onClose, roomId }) => {
   const [name, setName] = useState('');
-  const [imgUrl, setImgUrl] = useState('');
+  const [imgFile, setImgFile] = useState(null);
+  const [imgPreview, setImgPreview] = useState(null);
   const [cal, setCal] = useState('');
   const [protein, setProtein] = useState('');
   const [carbs, setCarbs] = useState('');
   const [fiber, setFiber] = useState('');
-  const ok = name.trim() && cal;
-  const iSt = { width: '100%', border: `1.5px solid ${C.border}`, borderRadius: 12, padding: '9px 14px', fontSize: 14, fontFamily: 'DM Sans', outline: 'none', color: C.text };
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
+  const ok = name.trim() && cal && protein && carbs && fiber;
+  const iSt = { width: '100%', border: `1.5px solid ${C.border}`, borderRadius: 12, padding: '9px 14px', fontSize: 14, fontFamily: 'DM Sans', outline: 'none', color: C.text, background: 'white' };
+  const handleImagePick = e => {
+    const file = e.target.files?.[0];
+    if (file) { setImgFile(file); setImgPreview(URL.createObjectURL(file)); }
+  };
+  const handleSubmit = async () => {
+    if (!ok || loading) return;
+    setLoading(true); setApiError('');
+    try {
+      const fd = new FormData();
+      fd.append('name', name.trim());
+      fd.append('calories', cal);
+      fd.append('protein', protein);
+      fd.append('carbs', carbs);
+      fd.append('fiber', fiber);
+      if (roomId) fd.append('room_id', roomId);
+      if (imgFile) fd.append('image', imgFile);
+      const res = await fetch('/api/dishes', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) { setApiError(data.error || 'Failed to save'); setLoading(false); return; }
+      onAdd({ id: data.dish.id, name: data.dish.name, img: data.dish.image_url || imgPreview, cal: data.dish.calories, protein: data.dish.protein, carbs: data.dish.carbs, fiber: data.dish.fiber, personal: true });
+      onClose();
+    } catch (_) { setApiError('Network error, please retry.'); setLoading(false); }
+  };
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.45)', zIndex: 150 }} />
-      <div className="slide-up" style={{ position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 390, background: 'white', borderRadius: '22px 22px 0 0', padding: '14px 20px 38px', zIndex: 160, maxHeight: '90vh', overflowY: 'auto' }}>
-        <div style={{ width: 38, height: 4, borderRadius: 2, background: '#E0D8CC', margin: '0 auto 12px' }} />
-        <h3 style={{ fontFamily: 'Playfair Display', fontSize: 19, fontWeight: 700, marginBottom: 12 }}>Add to Planner</h3>
-        <div style={{ marginBottom: 9 }}><label style={{ fontSize: 11, color: C.muted, fontWeight: 700, display: 'block', marginBottom: 4, letterSpacing: .4 }}>DISH NAME *</label><input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Chole Bhature" style={iSt} /></div>
-        <div style={{ marginBottom: 9 }}><label style={{ fontSize: 11, color: C.muted, fontWeight: 700, display: 'block', marginBottom: 4, letterSpacing: .4 }}>IMAGE URL (optional)</label><input value={imgUrl} onChange={e => setImgUrl(e.target.value)} placeholder="https://..." style={iSt} /></div>
+      <div className="slide-up" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, margin: '0 auto', width: '100%', maxWidth: 390, background: 'white', borderRadius: '22px 22px 0 0', padding: '14px 20px 38px', zIndex: 160, maxHeight: '92vh', overflowY: 'auto' }}>
+        <div style={{ width: 38, height: 4, borderRadius: 2, background: '#E0D8CC', margin: '0 auto 14px' }} />
+        <h3 style={{ fontFamily: 'Playfair Display', fontSize: 19, fontWeight: 700, marginBottom: 14 }}>Add to Planner</h3>
+
+        {/* Image picker */}
+        <label style={{ display: 'block', marginBottom: 12, cursor: 'pointer' }}>
+          <div style={{ borderRadius: 16, height: 130, overflow: 'hidden', border: `2px dashed ${C.border}`, background: C.light, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            {imgPreview ? (
+              <img src={imgPreview} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              <>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={C.muted} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 6 }}>
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
+                </svg>
+                <span style={{ fontSize: 13, fontWeight: 600, color: C.muted }}>Add Dish Photo</span>
+                <span style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>Camera · Gallery</span>
+              </>
+            )}
+            {imgPreview && (
+              <div onClick={e => { e.preventDefault(); setImgPreview(null); }} style={{ position: 'absolute', top: 8, right: 8, width: 26, height: 26, borderRadius: '50%', background: 'rgba(0,0,0,.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 700, zIndex: 2 }}>×</div>
+            )}
+          </div>
+          <input type="file" accept="image/*" onChange={handleImagePick} style={{ display: 'none' }} />
+        </label>
+
+        <div style={{ marginBottom: 10 }}>
+          <label style={{ fontSize: 11, color: C.muted, fontWeight: 700, display: 'block', marginBottom: 4, letterSpacing: .4 }}>DISH NAME *</label>
+          <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Chole Bhature" style={iSt} />
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
-          {[['CALORIES *', cal, setCal], ['PROTEIN (g)', protein, setProtein], ['CARBS (g)', carbs, setCarbs], ['FIBER (g)', fiber, setFiber]].map(([l, v, s]) => (
-            <div key={l}><label style={{ fontSize: 10, color: C.muted, fontWeight: 700, display: 'block', marginBottom: 4, letterSpacing: .3 }}>{l}</label>
-              <input type="number" value={v} onChange={e => s(e.target.value)} placeholder="0" style={{ ...iSt, textAlign: 'center', fontFamily: 'Playfair Display', fontWeight: 700, fontSize: 20, color: C.primary, padding: '8px 6px' }} /></div>
+          {[['CALORIES *', cal, setCal], ['PROTEIN (g) *', protein, setProtein], ['CARBS (g) *', carbs, setCarbs], ['FIBER (g) *', fiber, setFiber]].map(([l, v, s]) => (
+            <div key={l}>
+              <label style={{ fontSize: 10, color: C.muted, fontWeight: 700, display: 'block', marginBottom: 4, letterSpacing: .3 }}>{l}</label>
+              <input type="number" value={v} onChange={e => s(e.target.value)} placeholder="0" style={{ ...iSt, textAlign: 'center', fontFamily: 'Playfair Display', fontWeight: 700, fontSize: 20, color: C.primary, padding: '8px 6px' }} />
+            </div>
           ))}
         </div>
-        <button className="tap" onClick={() => { if (ok) { onAdd({ id: Date.now(), name: name.trim(), img: imgUrl || null, cal: +cal || 0, protein: +protein || 0, carbs: +carbs || 0, fiber: +fiber || 0, personal: true }); onClose(); } }} style={{ width: '100%', padding: '13px', borderRadius: 50, border: 'none', background: ok ? C.primary : '#D0C8BC', color: 'white', fontSize: 14, fontWeight: 600, cursor: ok ? 'pointer' : 'default', fontFamily: 'DM Sans' }}>Add to Planner</button>
+        {apiError && <p style={{ color: '#E53935', fontSize: 12.5, textAlign: 'center', marginBottom: 8 }}>{apiError}</p>}
+        <button className="tap" onClick={handleSubmit} disabled={!ok || loading} style={{ width: '100%', padding: '13px', borderRadius: 50, border: 'none', background: ok && !loading ? C.primary : '#D0C8BC', color: 'white', fontSize: 14, fontWeight: 600, cursor: ok && !loading ? 'pointer' : 'default', fontFamily: 'DM Sans' }}>
+          {loading ? 'Saving…' : 'Add to Planner'}
+        </button>
       </div>
     </>
   );
@@ -820,7 +1029,7 @@ const RepeatModal = ({ dishName, onSelect, onClose }) => {
   return (
     <>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.45)', zIndex: 150 }} />
-      <div className="slide-up" style={{ position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 390, background: 'white', borderRadius: '22px 22px 0 0', padding: '14px 20px 38px', zIndex: 160 }}>
+      <div className="slide-up" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, margin: '0 auto', width: '100%', maxWidth: 390, background: 'white', borderRadius: '22px 22px 0 0', padding: '14px 20px 38px', zIndex: 160 }}>
         <div style={{ width: 38, height: 4, borderRadius: 2, background: '#E0D8CC', margin: '0 auto 12px' }} />
         <h3 style={{ fontFamily: 'Playfair Display', fontSize: 18, fontWeight: 700, marginBottom: 4 }}>Repeat Schedule</h3>
         <p style={{ color: C.muted, fontSize: 12.5, marginBottom: 12 }}>How often for <em style={{ color: C.primary }}>{dishName}</em>?</p>
@@ -841,17 +1050,27 @@ const RepeatModal = ({ dishName, onSelect, onClose }) => {
 
 /* ══ PLANNER ══ */
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const BASE_DATES = [7, 8, 9, 10, 11, 12, 13];
 
-const PlannerScreen = ({ go, showRecipe, isAdmin, plannedMeals, setPlannedMeals }) => {
-  const [selDay, setSelDay] = useState(2);
+const _plannerToday = new Date();
+_plannerToday.setHours(0, 0, 0, 0);
+const TODAY_DOW = (_plannerToday.getDay() + 6) % 7; // 0=Mon … 6=Sun
+
+const getDateForIdx = absIdx => {
+  const d = new Date(_plannerToday);
+  d.setDate(_plannerToday.getDate() - TODAY_DOW + absIdx);
+  return d;
+};
+
+const PlannerScreen = ({ go, showRecipe, isAdmin, plannedMeals, setPlannedMeals, roomId }) => {
+  const [selDay, setSelDay] = useState(TODAY_DOW);
   const [addTarget, setAddTarget] = useState(null);
   const [repeatTarget, setRepeatTarget] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
   const HOURS = ['7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM'];
   const weekOffset = Math.floor(selDay / 7);
   const weekStart = weekOffset * 7;
-  const dates = BASE_DATES.map(d => d + weekOffset * 7);
+  const weekDates = Array.from({ length: 7 }, (_, i) => getDateForIdx(weekStart + i));
+  const dates = weekDates.map(d => d.getDate());
   const key = (abs, h) => `${Math.floor(abs / 7)}_${abs % 7}_${h}`;
   const getMeal = h => plannedMeals[key(selDay, h)] || null;
   const addMeal = (h, dish) => setPlannedMeals(p => ({ ...p, [key(selDay, h)]: { dish, repeat: 'once' } }));
@@ -859,7 +1078,7 @@ const PlannerScreen = ({ go, showRecipe, isAdmin, plannedMeals, setPlannedMeals 
   const setRepeatFn = (h, rep) => setPlannedMeals(p => ({ ...p, [key(selDay, h)]: { ...p[key(selDay, h)], repeat: rep } }));
   const absHasMeal = abs => HOURS.some(h => plannedMeals[key(abs, h)]);
   const rl = { once: '', daily: 'Every day', weekly: 'Every week', monthly: 'Every month' };
-  const monthLabel = weekOffset === 0 ? 'April 2025' : weekOffset === 1 ? 'April – Wk 2' : weekOffset === -1 ? 'March – Wk 4' : 'April 2025';
+  const monthLabel = getDateForIdx(selDay).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
   return (
     <div style={{ paddingBottom: 100, minHeight: '100vh', background: C.bg }} onClick={() => setOpenMenu(null)}>
       <StickyNav left={<span style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: 21 }}>Meal Plan</span>} />
@@ -867,18 +1086,20 @@ const PlannerScreen = ({ go, showRecipe, isAdmin, plannedMeals, setPlannedMeals 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}><span style={{ fontSize: 15 }}>📅</span><span style={{ fontWeight: 600, fontSize: 13.5 }}>{monthLabel}</span></div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <div onClick={() => setSelDay(d => Math.max(0, d - 1))} style={{ width: 28, height: 28, borderRadius: '50%', background: C.light, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 11, fontWeight: 700, userSelect: 'none' }}>◀</div>
-            <span onClick={() => setSelDay(2)} style={{ fontSize: 12, fontWeight: 600, color: C.primary, cursor: 'pointer', padding: '4px 10px', borderRadius: 20, background: '#FDF5F0' }}>Today</span>
+            <div onClick={() => setSelDay(d => d - 1)} style={{ width: 28, height: 28, borderRadius: '50%', background: C.light, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 11, fontWeight: 700, userSelect: 'none' }}>◀</div>
+            <span onClick={() => setSelDay(TODAY_DOW)} style={{ fontSize: 12, fontWeight: 600, color: C.primary, cursor: 'pointer', padding: '4px 10px', borderRadius: 20, background: '#FDF5F0' }}>Today</span>
             <div onClick={() => setSelDay(d => d + 1)} style={{ width: 28, height: 28, borderRadius: '50%', background: C.light, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 11, fontWeight: 700, userSelect: 'none' }}>▶</div>
           </div>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 2 }}>
           {DAYS.map((d, i) => {
             const absIdx = weekStart + i;
+            const isToday = absIdx === TODAY_DOW;
+            const isSelected = selDay === absIdx;
             return (
               <div key={d} onClick={() => setSelDay(absIdx)} style={{ textAlign: 'center', cursor: 'pointer' }}>
-                <div style={{ fontSize: 10, color: C.muted, marginBottom: 4, fontWeight: 500 }}>{d}</div>
-                <div style={{ width: 30, height: 30, borderRadius: '50%', margin: '0 auto', background: selDay === absIdx ? C.primary : 'transparent', color: selDay === absIdx ? 'white' : C.text, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: selDay === absIdx ? 700 : 400, fontSize: 13, transition: 'all .2s' }}>{dates[i]}</div>
+                <div style={{ fontSize: 10, color: isToday ? C.primary : C.muted, marginBottom: 4, fontWeight: isToday ? 700 : 500 }}>{d}</div>
+                <div style={{ width: 30, height: 30, borderRadius: '50%', margin: '0 auto', background: isSelected ? C.primary : isToday ? '#FDF5F0' : 'transparent', color: isSelected ? 'white' : isToday ? C.primary : C.text, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: isSelected || isToday ? 700 : 400, fontSize: 13, transition: 'all .2s', border: isToday && !isSelected ? `1.5px solid ${C.primary}` : 'none' }}>{dates[i]}</div>
                 <div style={{ width: '55%', height: 3, borderRadius: 2, background: absHasMeal(absIdx) ? C.primary : '#E0D8CC', margin: '4px auto 0', opacity: .7 }} />
               </div>
             );
@@ -921,7 +1142,7 @@ const PlannerScreen = ({ go, showRecipe, isAdmin, plannedMeals, setPlannedMeals 
         })}
       </div>
       <BottomNav active="planner" go={go} />
-      {addTarget && <AddDishModal onAdd={d => { addMeal(addTarget.hour, d); setAddTarget(null); }} onClose={() => setAddTarget(null)} />}
+      {addTarget && <AddDishModal onAdd={d => { addMeal(addTarget.hour, d); setAddTarget(null); }} onClose={() => setAddTarget(null)} roomId={roomId} />}
       {repeatTarget && <RepeatModal dishName={repeatTarget.meal.name} onSelect={rep => setRepeatFn(repeatTarget.hour, rep)} onClose={() => setRepeatTarget(null)} />}
     </div>
   );
@@ -979,13 +1200,31 @@ export default function App() {
   const [plannedMeals, setPlannedMeals] = useState({});
   const [roomId, setRoomId] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('culinary_room_id') : null);
   const [inviteCode, setInviteCode] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('culinary_invite_code') : null);
-  const [members, setMembers] = useState([{ id: 1, name: 'Sushant', role: 'admin', initials: 'SU', eating: true, color: '#D4956A', isCook: true }]);
+  const [roomName, setRoomName] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('culinary_room_name') : null);
+  const [members, setMembers] = useState([{ id: 1, name: 'You', role: 'admin', initials: 'YO', eating: true, color: '#D4956A', isCook: true }]);
   const hasNavigated = useRef(false);
+
+  useEffect(() => {
+    if (!session?.user) return;
+    const name = session.user.name || 'You';
+    const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    setMembers(ms => ms.map((m, i) => i === 0 ? { ...m, name, initials, avatar_url: session.user.image } : m));
+  }, [session?.user?.email]);
 
   useEffect(() => {
     if (roomId) localStorage.setItem('culinary_room_id', roomId);
     else localStorage.removeItem('culinary_room_id');
   }, [roomId]);
+
+  useEffect(() => {
+    if (inviteCode) localStorage.setItem('culinary_invite_code', inviteCode);
+    else localStorage.removeItem('culinary_invite_code');
+  }, [inviteCode]);
+
+  useEffect(() => {
+    if (roomName) localStorage.setItem('culinary_room_name', roomName);
+    else localStorage.removeItem('culinary_room_name');
+  }, [roomName]);
 
   // After Google sign-in: check profile + room → route to correct screen
   useEffect(() => {
@@ -1004,17 +1243,22 @@ export default function App() {
             activity: p.activity_level, bodyGoal: p.body_goal,
             target: p.target_cal, maintenance: p.maintenance_cal,
           });
-          // Check localStorage first (fast path)
-          const savedRoom = localStorage.getItem('culinary_room_id');
-          if (savedRoom) { go('hearth'); return; }
-          // Fallback: check DB
+          // Always check DB for latest room info
           try {
             const r = await fetch('/api/rooms/join');
             if (r.ok) {
-              const { roomId: dbRoom, inviteCode: dbInvite } = await r.json();
-              if (dbRoom) { setRoomId(dbRoom); if (dbInvite) setInviteCode(dbInvite); go('hearth'); return; }
+              const { roomId: dbRoom, inviteCode: dbInvite, roomName: dbRoomName } = await r.json();
+              if (dbRoom) {
+                setRoomId(dbRoom);
+                if (dbInvite) setInviteCode(dbInvite);
+                if (dbRoomName) setRoomName(dbRoomName);
+                go('hearth'); return;
+              }
             }
           } catch (_) {}
+          // Fallback: localStorage fast path
+          const savedRoom = localStorage.getItem('culinary_room_id');
+          if (savedRoom) { go('hearth'); return; }
           go('createjoin');
         } else {
           go('onboarding1');
@@ -1023,20 +1267,24 @@ export default function App() {
       .catch(() => go('onboarding1'));
   }, [status]);
 
+  const [notifSeen, setNotifSeen] = useState(false);
   const setProfile = fn => setProfileRaw(fn);
-  const go = s => { setScreen(s); if (typeof window !== 'undefined') window.scrollTo(0, 0); };
+  const go = s => { if (s === 'notifications') setNotifSeen(true); setScreen(s); if (typeof window !== 'undefined') window.scrollTo(0, 0); };
   const onVote = (id, liked) => setVotes(v => ({ ...v, [id]: liked }));
+  const onRoomCreated = (rId, rCode, rName) => {
+    setRoomId(rId); setInviteCode(rCode); setRoomName(rName); go('hearth');
+  };
   const screens = {
     welcome: <WelcomeScreen go={go} />,
     onboarding1: <Onboarding1 go={go} setProfile={setProfile} />,
     onboarding2: <Onboarding2 go={go} setProfile={setProfile} />,
     onboarding3: <Onboarding3 go={go} profile={profile} setProfile={setProfile} />,
-    createjoin: <CreateJoinScreen go={go} userName={members[0]?.name || 'Chef'} />,
+    createjoin: <CreateJoinScreen go={go} userName={members[0]?.name || 'Chef'} onRoomCreated={onRoomCreated} />,
     joincode: <JoinCodeScreen go={go} />,
-    hearth: <HearthScreen go={go} showRecipe={setRecipe} profile={profile} members={members} setMembers={setMembers} plannedMeals={plannedMeals} />,
+    hearth: <HearthScreen go={go} showRecipe={setRecipe} profile={profile} members={members} setMembers={setMembers} plannedMeals={plannedMeals} inviteCode={inviteCode} roomName={roomName} hasNotif={!notifSeen} />,
     match: <MatchScreen go={go} showRecipe={setRecipe} dishPool={DISH_POOL} votes={votes} onVote={onVote} profile={profile} setPlannedMeals={setPlannedMeals} />,
-    planner: <PlannerScreen go={go} showRecipe={setRecipe} isAdmin={true} plannedMeals={plannedMeals} setPlannedMeals={setPlannedMeals} />,
-    profile: <ProfileScreen go={go} profile={profile} setProfile={setProfile} />,
+    planner: <PlannerScreen go={go} showRecipe={setRecipe} isAdmin={true} plannedMeals={plannedMeals} setPlannedMeals={setPlannedMeals} roomId={roomId} />,
+    profile: <ProfileScreen go={go} profile={profile} setProfile={setProfile} session={session} />,
     notifications: <NotificationsScreen go={go} dishPool={DISH_POOL} />,
   };
   if (status === 'loading') return (

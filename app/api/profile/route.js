@@ -32,10 +32,10 @@ export async function POST(req) {
   if (!token?.supabaseId) return Response.json({ error: 'Not authenticated' }, { status: 401 });
 
   const body = await req.json();
-  const { dob, date_of_birth, weight_kg, height_cm, food_pref, allergies, activity_level, body_goal, gender = 'm' } = body;
+  const { dob, date_of_birth, weight_kg, height_cm, food_pref, allergies, activity_level, body_goal, gender = 'm', age: directAge } = body;
 
   const dobValue = dob || date_of_birth || null;
-  const age = dobValue ? calcAgeFromDob(dobValue) : null;
+  const age = dobValue ? calcAgeFromDob(dobValue) : (directAge ?? null);
 
   let maintenance = null, target = null;
   if (age && weight_kg && height_cm && activity_level && body_goal) {
@@ -44,7 +44,7 @@ export async function POST(req) {
 
   const update = {};
   if (dobValue)             update.date_of_birth  = dobValue;
-  if (age !== null)         update.age            = age;
+  if (age !== null && age !== undefined) update.age = age;
   if (weight_kg)            update.weight_kg      = weight_kg;
   if (height_cm)            update.height_cm      = height_cm;
   if (food_pref)            update.food_pref      = food_pref;
