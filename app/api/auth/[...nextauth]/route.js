@@ -7,6 +7,13 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          scope: 'openid email profile https://www.googleapis.com/auth/fitness.activity.read',
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
@@ -27,22 +34,26 @@ export const authOptions = {
       return true;
     },
     async jwt({ token, user, account }) {
-      if (account?.provider === 'google' && user?.email) {
-        const { data: profile } = await supabaseAdmin
-          .from('profiles')
-          .select('id, name, avatar_url')
-          .eq('email', user.email)
-          .single();
-        if (profile) {
-          token.supabaseId = profile.id;
-          token.name = profile.name;
-          token.picture = profile.avatar_url;
+      if (account?.provider === 'google') {
+        token.accessToken = account.access_token;
+        if (user?.email) {
+          const { data: profile } = await supabaseAdmin
+            .from('profiles')
+            .select('id, name, avatar_url')
+            .eq('email', user.email)
+            .single();
+          if (profile) {
+            token.supabaseId = profile.id;
+            token.name = profile.name;
+            token.picture = profile.avatar_url;
+          }
         }
       }
       return token;
     },
     async session({ session, token }) {
       session.user.supabaseId = token.supabaseId;
+      session.accessToken = token.accessToken;
       return session;
     },
   },
