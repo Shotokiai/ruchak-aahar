@@ -669,47 +669,105 @@ const ProfileScreen = ({ go, profile, setProfile, session }) => {
 };
 
 /* ══ NOTIFICATIONS SCREEN ══ */
-const NotificationsScreen = ({ go, dishPool }) => {
-  const userDishes = dishPool?.slice(0, 2) || [];
+const NotificationsScreen = ({ go, notifications, setNotifications }) => {
+  const [viewingDish, setViewingDish] = useState(null);
+
+  const handleClick = notif => {
+    if (notif.viewed) return;
+    setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, viewed: true } : n));
+    setViewingDish(notif.dish);
+  };
+
+  const ordinal = d => { const s = ['th','st','nd','rd'], v = d % 100; return d + (s[(v-20)%10] || s[v] || s[0]); };
+  const fmtDate = iso => { const d = new Date(iso); return `${ordinal(d.getDate())} ${d.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}`; };
+
+  const grouped = {};
+  (notifications || []).forEach(n => {
+    const key = new Date(n.addedAt).toDateString();
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(n);
+  });
+  const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+
   return (
-    <div style={{ minHeight: '100vh', background: C.bg }}>
-      <div style={{ position: 'sticky', top: 0, zIndex: 50, background: 'white', borderBottom: `1px solid ${C.border}`, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 10px rgba(0,0,0,.06)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+    <>
+      <div style={{ minHeight: '100vh', background: C.bg, paddingBottom: 40 }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 50, background: 'white', borderBottom: `1px solid ${C.border}`, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 2px 10px rgba(0,0,0,.06)' }}>
           <div className="tap" onClick={() => go('hearth')} style={{ width: 34, height: 34, borderRadius: '50%', background: C.light, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 16, flexShrink: 0 }}>←</div>
           <span style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: 17 }}>Notifications</span>
         </div>
-      </div>
-      <div style={{ padding: '14px 16px' }}>
-        {userDishes.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', marginTop: 40 }}>
-            <div style={{ fontSize: 50, marginBottom: 12 }}>📝</div>
-            <h3 style={{ fontFamily: 'Playfair Display', fontSize: 18, fontWeight: 700, marginBottom: 6 }}>No dishes added yet</h3>
-            <p style={{ color: C.muted, fontSize: 13.5, lineHeight: 1.6, marginBottom: 20 }}>Dishes added to your family pool will appear here.</p>
-            <button onClick={() => go('hearth')} style={{ background: C.primary, color: 'white', border: 'none', borderRadius: 50, padding: '10px 24px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>Go back</button>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {userDishes.map((d) => (
-              <div key={d.id} style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 10px rgba(0,0,0,.06)', display: 'flex', gap: 12 }}>
-                {d.img && <img src={d.img} alt={d.name} style={{ width: 80, height: 80, objectFit: 'cover', flexShrink: 0 }} />}
-                <div style={{ flex: 1, padding: '12px 0 12px 0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 2 }}>{d.name}</div>
-                  <div style={{ fontSize: 12, color: C.muted, marginBottom: 8 }}>{d.cal} kcal · {d.protein}g protein</div>
-                  <span style={{ fontSize: 11, color: C.primary, fontWeight: 600 }}>✓ Added to pool</span>
+        <div style={{ padding: '16px 16px' }}>
+          {sortedDates.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '60px 20px', marginTop: 40 }}>
+              <div style={{ fontSize: 50, marginBottom: 12 }}>🔔</div>
+              <h3 style={{ fontFamily: 'Playfair Display', fontSize: 18, fontWeight: 700, marginBottom: 6 }}>No notifications yet</h3>
+              <p style={{ color: C.muted, fontSize: 13.5, lineHeight: 1.6 }}>When your family adds dishes to the pool, they'll show up here.</p>
+            </div>
+          ) : (
+            sortedDates.map(dateKey => (
+              <div key={dateKey} style={{ marginBottom: 26 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                  <span style={{ fontFamily: 'Playfair Display', fontSize: 15, fontWeight: 700, color: C.text, whiteSpace: 'nowrap' }}>{fmtDate(grouped[dateKey][0].addedAt)}</span>
+                  <div style={{ flex: 1, height: 1, background: C.border }} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {grouped[dateKey].map(notif => (
+                    <div key={notif.id} onClick={() => handleClick(notif)} style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 10px rgba(0,0,0,.06)', display: 'flex', cursor: notif.viewed ? 'default' : 'pointer', position: 'relative' }}>
+                      {notif.dish.img && <img src={notif.dish.img} alt={notif.dish.name} style={{ width: 80, height: 80, objectFit: 'cover', flexShrink: 0 }} />}
+                      <div style={{ flex: 1, padding: '12px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 2 }}>{notif.dish.name}</div>
+                        <div style={{ fontSize: 12, color: C.muted, marginBottom: 6 }}>{notif.dish.cal} kcal · {notif.dish.protein}g protein</div>
+                        <span style={{ fontSize: 11, color: notif.viewed ? C.muted : C.primary, fontWeight: 600 }}>✓ {notif.viewed ? 'Viewed' : 'Added to pool — tap to view recipe'}</span>
+                      </div>
+                      {notif.viewed && <div style={{ position: 'absolute', inset: 0, background: 'rgba(245,239,224,.55)', pointerEvents: 'none' }} />}
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </div>
-    </div>
+      {viewingDish && <RecipeModal dish={viewingDish} close={() => setViewingDish(null)} />}
+    </>
   );
 };
 
 /* ══ HEARTH ══ */
-const HearthScreen = ({ go, showRecipe, profile, members, setMembers, plannedMeals, inviteCode, roomName, hasNotif }) => {
+const HearthScreen = ({ go, showRecipe, profile, members, setMembers, plannedMeals, inviteCode, roomName, hasNotif, setDishPool, onDishAddedToPool }) => {
   const [memberMenu, setMemberMenu] = useState(null);
   const [navCopied, setNavCopied] = useState(false);
+  const [fitness, setFitness] = useState({ steps: 0, calories: 0 });
+  const [linkInput, setLinkInput] = useState('');
+  const [linkLoading, setLinkLoading] = useState(false);
+  const [linkError, setLinkError] = useState('');
+
+  const handleAddToPool = async () => {
+    const url = linkInput.trim();
+    if (!url) return;
+    if (url.includes('instagram.com') || url.includes('instagr.am')) {
+      setLinkError("Instagram links can't be auto-extracted. Please use Add Manually in the Planner instead.");
+      return;
+    }
+    setLinkLoading(true); setLinkError('');
+    try {
+      const res = await fetch('/api/extract-dish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url }) });
+      const data = await res.json();
+      if (!res.ok || data.error) { setLinkError(data.message || 'Could not extract dish from this link.'); setLinkLoading(false); return; }
+      if (setDishPool) setDishPool(prev => [...prev, data.dish]);
+      if (onDishAddedToPool) onDishAddedToPool(data.dish);
+      setLinkInput('');
+      setLinkError('');
+    } catch { setLinkError('Network error. Please try again.'); }
+    setLinkLoading(false);
+  };
+
+  useEffect(() => {
+    fetch('/api/fitness')
+      .then(r => r.json())
+      .then(d => { if (d.steps !== undefined) setFitness(d); })
+      .catch(() => {});
+  }, []);
 
   const handleAddMember = async () => {
     const code = inviteCode || '——';
@@ -724,10 +782,13 @@ const HearthScreen = ({ go, showRecipe, profile, members, setMembers, plannedMea
     }
   };
   const target = profile?.target || 2000;
-  const ate = 0, burned = 0, remain = target;
-  const pct = Math.max(ate / target, .04);
-  const r = 36, circ = 2 * Math.PI * r;
-  const todayEntry = Object.entries(plannedMeals).find(([k]) => k.startsWith('2_'));
+  const burned = fitness.calories;
+  const foodCal = Object.entries(plannedMeals)
+    .filter(([k]) => k.startsWith(`0_${TODAY_DOW}_`))
+    .reduce((sum, [, v]) => sum + (v?.dish?.cal || 0), 0);
+  const remain = Math.max(target - foodCal + burned, 0);
+  const rR = 46, circR = 2 * Math.PI * rR;
+  const todayEntry = Object.entries(plannedMeals).find(([k]) => k.startsWith(`0_${TODAY_DOW}_`));
   const todaysDish = todayEntry?.[1]?.dish || null;
   const toggleEating = id => setMembers(ms => ms.map(m => m.id === id ? { ...m, eating: !m.eating } : m));
   const setCook = id => setMembers(ms => ms.map(m => ({ ...m, isCook: m.id === id })));
@@ -753,43 +814,59 @@ const HearthScreen = ({ go, showRecipe, profile, members, setMembers, plannedMea
         right={<div className="tap" onClick={() => go('notifications')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: '6px' }}><BellIcon filled={!!hasNotif} /></div>}
       />
       <div style={{ padding: '14px 20px 0' }}>
-        {/* Search */}
-        <div style={{ display: 'flex', background: 'white', borderRadius: 50, overflow: 'hidden', alignItems: 'center', padding: '4px 4px 4px 14px', boxShadow: '0 2px 10px rgba(0,0,0,.07)', marginBottom: 14 }}>
-          <span style={{ fontSize: 14, marginRight: 7, color: C.muted, flexShrink: 0 }}>🔍</span>
-          <input placeholder="Search or paste link to add a dish…" style={{ flex: 1, border: 'none', outline: 'none', fontSize: 12.5, background: 'transparent', fontFamily: 'DM Sans', color: C.text, minWidth: 0 }} />
-          <button className="tap" style={{ background: C.primary, color: 'white', border: 'none', borderRadius: 50, padding: '9px 13px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans', flexShrink: 0 }}>Add to pool</button>
+        {/* Search / link */}
+        <div>
+          <div style={{ display: 'flex', background: 'white', borderRadius: 50, overflow: 'hidden', alignItems: 'center', padding: '4px 4px 4px 14px', boxShadow: '0 2px 10px rgba(0,0,0,.07)', marginBottom: linkError ? 6 : 14 }}>
+            <span style={{ fontSize: 14, marginRight: 7, color: C.muted, flexShrink: 0 }}>🔍</span>
+            <input value={linkInput} onChange={e => { setLinkInput(e.target.value); setLinkError(''); }} onKeyDown={e => e.key === 'Enter' && handleAddToPool()} placeholder="Paste a recipe link to add a dish…" style={{ flex: 1, border: 'none', outline: 'none', fontSize: 12.5, background: 'transparent', fontFamily: 'DM Sans', color: C.text, minWidth: 0 }} />
+            <button className="tap" onClick={handleAddToPool} disabled={linkLoading || !linkInput.trim()} style={{ background: linkInput.trim() ? C.primary : '#D0C8BC', color: 'white', border: 'none', borderRadius: 50, padding: '9px 13px', fontSize: 12, fontWeight: 600, cursor: linkInput.trim() ? 'pointer' : 'default', fontFamily: 'DM Sans', flexShrink: 0, transition: 'background .2s' }}>{linkLoading ? '…' : 'Add to pool'}</button>
+          </div>
+          {linkError && <div style={{ fontSize: 12, color: '#E53935', paddingLeft: 14, marginBottom: 10 }}>{linkError}</div>}
         </div>
         {/* Calorie ring */}
-        <div style={{ background: C.dark, borderRadius: 20, padding: '16px 18px', marginBottom: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div style={{ position: 'relative', width: 82, height: 82, flexShrink: 0 }}>
-              <svg width="82" height="82" style={{ transform: 'rotate(-90deg)' }}>
-                <circle cx="41" cy="41" r={r} fill="none" stroke="rgba(255,255,255,.1)" strokeWidth="7" />
-                <circle cx="41" cy="41" r={r} fill="none" stroke="white" strokeWidth="7" strokeLinecap="round" strokeDasharray={`${circ * pct} ${circ * (1 - pct)}`} />
+        <div style={{ background: C.dark, borderRadius: 20, padding: '18px 16px', marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {/* Ring — arc grows clockwise from 3 o'clock as food is logged */}
+            <div style={{ position: 'relative', width: 110, height: 110, flexShrink: 0 }}>
+              <svg width="110" height="110" style={{ transform: 'rotate(-90deg)' }}>
+                <circle cx="55" cy="55" r={rR} fill="none" stroke="rgba(255,255,255,.12)" strokeWidth="10" />
+                {foodCal > 0 && (
+                  <circle cx="55" cy="55" r={rR} fill="none" stroke={C.primary} strokeWidth="10" strokeLinecap="round"
+                    strokeDasharray={`${circR * Math.min(foodCal / target, 1)} ${circR}`} />
+                )}
               </svg>
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center' }}>
-                <div style={{ color: 'white', fontWeight: 700, fontSize: 14, fontFamily: 'Playfair Display', lineHeight: 1 }}>{ate}</div>
-                <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 10 }}>kcal ate</div>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', width: '100%' }}>
+                <div style={{ color: 'white', fontWeight: 700, fontSize: 20, fontFamily: 'Playfair Display', lineHeight: 1.1 }}>{remain}</div>
+                <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 10.5, marginTop: 2 }}>Remaining</div>
               </div>
             </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 11, marginBottom: 2 }}>Daily calorie target</div>
-              <div style={{ color: 'white', fontFamily: 'Playfair Display', fontSize: 22, fontWeight: 700, marginBottom: 8 }}>{target} <span style={{ fontSize: 12, fontWeight: 400 }}>kcal</span></div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <div style={{ flex: 1, background: 'rgba(255,255,255,.07)', borderRadius: 8, padding: '5px 8px' }}>
-                  <div style={{ color: 'rgba(255,255,255,.45)', fontSize: 10 }}>🍴 Food</div>
-                  <div style={{ color: 'white', fontSize: 11.5, fontWeight: 600, marginTop: 1 }}>{ate} kcal</div>
+            {/* Divider */}
+            <div style={{ width: 1, height: 76, background: 'rgba(255,255,255,.15)', flexShrink: 0, margin: '0 14px' }} />
+            {/* Stats */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(255,255,255,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4956A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>
+                  </svg>
                 </div>
-                <div style={{ flex: 1, background: 'rgba(255,255,255,.07)', borderRadius: 8, padding: '5px 8px' }}>
-                  <div style={{ color: 'rgba(255,255,255,.45)', fontSize: 10 }}>🏃 Exercise</div>
-                  <div style={{ color: 'white', fontSize: 11.5, fontWeight: 600, marginTop: 1 }}>+{burned} kcal</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: 'rgba(255,255,255,.45)', fontSize: 11 }}>Food</div>
+                  <div style={{ color: 'white', fontWeight: 700, fontSize: 17, fontFamily: 'Playfair Display', lineHeight: 1.2 }}>{foodCal} <span style={{ fontSize: 11, fontWeight: 400, color: 'rgba(255,255,255,.5)' }}>/ {target} cal</span></div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(255,255,255,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4956A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="4" r="2"/><path d="m15.5 8.5-1.5 3-3 1.5-1.5 3M9 12l-3 4"/><path d="m15 12 3 4"/>
+                  </svg>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: 'rgba(255,255,255,.45)', fontSize: 11 }}>Exercise · {fitness.steps.toLocaleString()} steps</div>
+                  <div style={{ color: 'white', fontWeight: 700, fontSize: 17, fontFamily: 'Playfair Display', lineHeight: 1.2 }}>+{burned} <span style={{ fontSize: 11, fontWeight: 400, color: 'rgba(255,255,255,.5)' }}>cal burned</span></div>
                 </div>
               </div>
             </div>
-          </div>
-          <div style={{ marginTop: 10, padding: '7px 12px', background: 'rgba(255,255,255,.07)', borderRadius: 9, display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'rgba(255,255,255,.55)', fontSize: 12 }}>Remaining today</span>
-            <span style={{ color: 'white', fontWeight: 700, fontSize: 12 }}>{remain} kcal</span>
           </div>
         </div>
         {/* At The Table */}
@@ -816,32 +893,15 @@ const HearthScreen = ({ go, showRecipe, profile, members, setMembers, plannedMea
         </div>
         {/* Tonight's Plan */}
         <h2 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: 19, marginBottom: 12 }}>Tonight's Plan</h2>
-        {todaysDish ? (
-          <div style={{ background: 'white', borderRadius: 22, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,.07)', marginBottom: 20 }}>
-            {todaysDish.img && <img src={todaysDish.img} alt={todaysDish.name} style={{ width: '100%', height: 200, objectFit: 'cover' }} />}
-            <div style={{ padding: '14px 18px 18px' }}>
-              <span style={{ background: '#E8F5E9', color: '#2E7D32', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, letterSpacing: .5 }}>CONFIRMED</span>
-              <h3 style={{ fontFamily: 'Playfair Display', fontSize: 21, fontWeight: 700, margin: '9px 0 5px' }}>{todaysDish.name}</h3>
-              {todaysDish.desc && <p style={{ color: C.muted, fontSize: 13, fontStyle: 'italic', marginBottom: 14, lineHeight: 1.5 }}>{todaysDish.desc}</p>}
-              <div style={{ display: 'flex', gap: 20, marginBottom: 14 }}>
-                {[['PROTEIN', todaysDish.protein], ['FIBER', todaysDish.fiber], ['CARBS', todaysDish.carbs]].map(([l, v]) => (
-                  <div key={l}><div style={{ fontFamily: 'Playfair Display', fontSize: 20, fontWeight: 700, lineHeight: 1 }}>{v}<span style={{ fontSize: 12 }}> gm</span></div><div style={{ fontSize: 10, color: C.muted, fontWeight: 700, marginTop: 2, letterSpacing: .5 }}>{l}</div></div>
-                ))}
-              </div>
-              <div style={{ textAlign: 'right' }}><button className="tap" onClick={() => showRecipe(todaysDish)} style={{ background: C.primary, color: 'white', border: 'none', borderRadius: 50, padding: '10px 22px', fontSize: 13.5, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>View Recipe</button></div>
-            </div>
+        <div style={{ background: 'white', borderRadius: 22, padding: '32px 24px', textAlign: 'center', marginBottom: 20, boxShadow: '0 2px 10px rgba(0,0,0,.05)' }}>
+          <div style={{ fontSize: 50, marginBottom: 10 }}>🍲</div>
+          <h3 style={{ fontFamily: 'Playfair Display', fontSize: 20, fontWeight: 700, marginBottom: 7 }}>No dishes yet!</h3>
+          <p style={{ color: C.muted, fontSize: 13.5, lineHeight: 1.65, marginBottom: 18 }}>Your family hasn't voted on tonight's dinner yet.<br />Start voting or add directly to the Planner.</p>
+          <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+            <button className="tap" onClick={() => go('match')} style={{ background: C.primary, color: 'white', border: 'none', borderRadius: 50, padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>Vote in Match</button>
+            <button className="tap" onClick={() => go('planner')} style={{ background: 'white', color: C.text, border: `2px solid ${C.border}`, borderRadius: 50, padding: '10px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>Open Planner</button>
           </div>
-        ) : (
-          <div style={{ background: 'white', borderRadius: 22, padding: '32px 24px', textAlign: 'center', marginBottom: 20, boxShadow: '0 2px 10px rgba(0,0,0,.05)' }}>
-            <div style={{ fontSize: 50, marginBottom: 10 }}>🍲</div>
-            <h3 style={{ fontFamily: 'Playfair Display', fontSize: 20, fontWeight: 700, marginBottom: 7 }}>No dishes yet!</h3>
-            <p style={{ color: C.muted, fontSize: 13.5, lineHeight: 1.65, marginBottom: 18 }}>Your family hasn't voted on tonight's dinner yet.<br />Start voting or add directly to the Planner.</p>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-              <button className="tap" onClick={() => go('match')} style={{ background: C.primary, color: 'white', border: 'none', borderRadius: 50, padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>Vote in Match</button>
-              <button className="tap" onClick={() => go('planner')} style={{ background: 'white', color: C.text, border: `2px solid ${C.border}`, borderRadius: 50, padding: '10px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>Open Planner</button>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
       <BottomNav active="hearth" go={go} />
       {memberMenu && <MemberMenuModal member={memberMenu} isAdmin={true} allMembers={members} onClose={() => setMemberMenu(null)} onToggleEating={() => toggleEating(memberMenu.id)} onSetCook={id => { setCook(id); }} />}
@@ -1048,6 +1108,79 @@ const RepeatModal = ({ dishName, onSelect, onClose }) => {
   );
 };
 
+/* ══ ADD MEAL SHEET ══ */
+const getTabForHour = hour => {
+  const breakfast = ['7 AM', '8 AM', '9 AM', '10 AM'];
+  const lunch = ['11 AM', '12 PM', '1 PM', '2 PM'];
+  if (breakfast.includes(hour)) return 'breakfast';
+  if (lunch.includes(hour)) return 'lunch';
+  return 'dinner';
+};
+
+const getMealTypeForDish = dish => {
+  const cal = dish.cal || 0;
+  if (dish.mealType) return dish.mealType;
+  if (cal < 300) return 'breakfast';
+  if (cal <= 450) return 'dinner';
+  return 'lunch';
+};
+
+const AddMealSheet = ({ hour, dishPool, onSelectDish, onAddManually, onClose }) => {
+  const [tab, setTab] = useState(() => getTabForHour(hour));
+  const [search, setSearch] = useState('');
+  const filtered = (dishPool || []).filter(d =>
+    getMealTypeForDish(d) === tab &&
+    d.name.toLowerCase().includes(search.toLowerCase())
+  );
+  return (
+    <>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.45)', zIndex: 150 }} />
+      <div className="slide-up" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, margin: '0 auto', width: '100%', maxWidth: 390, background: 'white', borderRadius: '22px 22px 0 0', padding: '14px 20px 34px', zIndex: 160, maxHeight: '88vh', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+        <div style={{ width: 38, height: 4, borderRadius: 2, background: '#E0D8CC', margin: '0 auto 16px' }} />
+        {/* Meal type tabs */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+          {[['breakfast', '🌅', 'Breakfast'], ['lunch', '☀️', 'Lunch'], ['dinner', '🌙', 'Dinner']].map(([id, ic, label]) => (
+            <div key={id} onClick={() => setTab(id)} style={{ flex: 1, textAlign: 'center', padding: '8px 4px', borderRadius: 12, background: tab === id ? C.primary : C.light, color: tab === id ? 'white' : C.muted, cursor: 'pointer', fontSize: 12, fontWeight: 700, transition: 'all .2s' }}>
+              <div style={{ fontSize: 16, marginBottom: 2 }}>{ic}</div>{label}
+            </div>
+          ))}
+        </div>
+        {/* Search bar */}
+        <div style={{ display: 'flex', alignItems: 'center', background: C.light, borderRadius: 12, padding: '9px 14px', marginBottom: 12 }}>
+          <span style={{ color: C.muted, fontSize: 15, marginRight: 8 }}>🔍</span>
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search dishes…" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: 14, fontFamily: 'DM Sans', color: C.text }} />
+          {search && <span onClick={() => setSearch('')} style={{ cursor: 'pointer', color: C.muted, fontSize: 18, lineHeight: 1 }}>×</span>}
+        </div>
+        {/* Dish list */}
+        <div style={{ flex: 1, overflowY: 'auto', marginBottom: 12 }}>
+          {filtered.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '28px 20px', color: C.muted }}>
+              <div style={{ fontSize: 38, marginBottom: 8 }}>{tab === 'breakfast' ? '🌅' : tab === 'lunch' ? '☀️' : '🌙'}</div>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>No {tab} dishes yet</div>
+              <div style={{ fontSize: 12 }}>{search ? 'Try a different search or' : 'Add a dish manually or switch tabs to'} find something</div>
+            </div>
+          ) : (
+            filtered.map(d => (
+              <div key={d.id} onClick={() => onSelectDish(d)} style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#F9F6F2', borderRadius: 14, padding: '10px 12px', marginBottom: 8, cursor: 'pointer' }}>
+                {d.img ? <img src={d.img} alt={d.name} style={{ width: 48, height: 48, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }} /> : <div style={{ width: 48, height: 48, borderRadius: 10, background: C.light, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>🍽</div>}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.name}</div>
+                  <div style={{ fontSize: 11.5, color: C.muted }}>🔥 {d.cal} kcal · 💪 {d.protein}g · 🌾 {d.carbs}g</div>
+                </div>
+                <div style={{ width: 28, height: 28, borderRadius: '50%', background: C.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 18, fontWeight: 700, flexShrink: 0 }}>+</div>
+              </div>
+            ))
+          )}
+        </div>
+        {/* Add manually */}
+        <div onClick={onAddManually} style={{ textAlign: 'center', padding: '13px', borderRadius: 14, border: `2px dashed ${C.border}`, cursor: 'pointer' }}>
+          <span style={{ fontSize: 13.5, fontWeight: 600, color: C.primary }}>+ Can't find your dish? Add manually</span>
+        </div>
+      </div>
+    </>
+  );
+};
+
 /* ══ PLANNER ══ */
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -1061,11 +1194,15 @@ const getDateForIdx = absIdx => {
   return d;
 };
 
-const PlannerScreen = ({ go, showRecipe, isAdmin, plannedMeals, setPlannedMeals, roomId }) => {
+const PlannerScreen = ({ go, showRecipe, isAdmin, plannedMeals, setPlannedMeals, roomId, dishPool, setDishPool, onDishAddedToPool }) => {
   const [selDay, setSelDay] = useState(TODAY_DOW);
   const [addTarget, setAddTarget] = useState(null);
+  const [addManual, setAddManual] = useState(false);
   const [repeatTarget, setRepeatTarget] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
+  const [toast, setToast] = useState('');
+  const isFutureDay = selDay > TODAY_DOW;
+  const showToast = msg => { setToast(msg); setTimeout(() => setToast(''), 2800); };
   const HOURS = ['7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM'];
   const weekOffset = Math.floor(selDay / 7);
   const weekStart = weekOffset * 7;
@@ -1134,7 +1271,14 @@ const PlannerScreen = ({ go, showRecipe, isAdmin, plannedMeals, setPlannedMeals,
                     </div>
                   </div>
                 ) : (
-                  <div onClick={() => setAddTarget({ hour: t })} style={{ color: '#C4B8A8', fontSize: 22, cursor: 'pointer', lineHeight: 1, paddingTop: 2, display: 'inline-block' }}>+</div>
+                  <div onClick={() => {
+                    if (isFutureDay) {
+                      const dayName = getDateForIdx(selDay).toLocaleDateString('en-IN', { weekday: 'long' });
+                      showToast(`Add dishes on ${dayName} when it arrives ✨`);
+                    } else {
+                      setAddTarget({ hour: t });
+                    }
+                  }} style={{ color: '#C4B8A8', fontSize: 22, cursor: isFutureDay ? 'default' : 'pointer', lineHeight: 1, paddingTop: 2, display: 'inline-block' }}>+</div>
                 )}
               </div>
             </div>
@@ -1142,7 +1286,33 @@ const PlannerScreen = ({ go, showRecipe, isAdmin, plannedMeals, setPlannedMeals,
         })}
       </div>
       <BottomNav active="planner" go={go} />
-      {addTarget && <AddDishModal onAdd={d => { addMeal(addTarget.hour, d); setAddTarget(null); }} onClose={() => setAddTarget(null)} roomId={roomId} />}
+      {toast && (
+        <div style={{ position: 'fixed', bottom: 100, left: '50%', transform: 'translateX(-50%)', background: C.dark, color: 'white', padding: '11px 20px', borderRadius: 50, fontSize: 13, fontWeight: 500, zIndex: 300, whiteSpace: 'nowrap', boxShadow: '0 4px 20px rgba(0,0,0,.25)', pointerEvents: 'none' }}>
+          {toast}
+        </div>
+      )}
+      {addTarget && !addManual && (
+        <AddMealSheet
+          hour={addTarget.hour}
+          dishPool={dishPool || []}
+          onSelectDish={d => { addMeal(addTarget.hour, d); setAddTarget(null); }}
+          onAddManually={() => setAddManual(true)}
+          onClose={() => setAddTarget(null)}
+        />
+      )}
+      {addTarget && addManual && (
+        <AddDishModal
+          onAdd={d => {
+            if (setDishPool) setDishPool(prev => [...prev, d]);
+            if (onDishAddedToPool) onDishAddedToPool(d);
+            addMeal(addTarget.hour, d);
+            setAddTarget(null);
+            setAddManual(false);
+          }}
+          onClose={() => { setAddTarget(null); setAddManual(false); }}
+          roomId={roomId}
+        />
+      )}
       {repeatTarget && <RepeatModal dishName={repeatTarget.meal.name} onSelect={rep => setRepeatFn(repeatTarget.hour, rep)} onClose={() => setRepeatTarget(null)} />}
     </div>
   );
@@ -1198,6 +1368,8 @@ export default function App() {
   const [profile, setProfileRaw] = useState({});
   const [votes, setVotes] = useState({});
   const [plannedMeals, setPlannedMeals] = useState({});
+  const [dishPool, setDishPool] = useState(DISH_POOL);
+  const [notifications, setNotifications] = useState([]);
   const [roomId, setRoomId] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('culinary_room_id') : null);
   const [inviteCode, setInviteCode] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('culinary_invite_code') : null);
   const [roomName, setRoomName] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('culinary_room_name') : null);
@@ -1267,9 +1439,10 @@ export default function App() {
       .catch(() => go('onboarding1'));
   }, [status]);
 
-  const [notifSeen, setNotifSeen] = useState(false);
   const setProfile = fn => setProfileRaw(fn);
-  const go = s => { if (s === 'notifications') setNotifSeen(true); setScreen(s); if (typeof window !== 'undefined') window.scrollTo(0, 0); };
+  const go = s => { setScreen(s); if (typeof window !== 'undefined') window.scrollTo(0, 0); };
+  const hasNotif = notifications.some(n => !n.viewed);
+  const addDishNotification = dish => setNotifications(prev => [...prev, { id: Date.now(), dish, addedAt: new Date().toISOString(), viewed: false }]);
   const onVote = (id, liked) => setVotes(v => ({ ...v, [id]: liked }));
   const onRoomCreated = (rId, rCode, rName) => {
     setRoomId(rId); setInviteCode(rCode); setRoomName(rName); go('hearth');
@@ -1281,11 +1454,11 @@ export default function App() {
     onboarding3: <Onboarding3 go={go} profile={profile} setProfile={setProfile} />,
     createjoin: <CreateJoinScreen go={go} userName={members[0]?.name || 'Chef'} onRoomCreated={onRoomCreated} />,
     joincode: <JoinCodeScreen go={go} />,
-    hearth: <HearthScreen go={go} showRecipe={setRecipe} profile={profile} members={members} setMembers={setMembers} plannedMeals={plannedMeals} inviteCode={inviteCode} roomName={roomName} hasNotif={!notifSeen} />,
-    match: <MatchScreen go={go} showRecipe={setRecipe} dishPool={DISH_POOL} votes={votes} onVote={onVote} profile={profile} setPlannedMeals={setPlannedMeals} />,
-    planner: <PlannerScreen go={go} showRecipe={setRecipe} isAdmin={true} plannedMeals={plannedMeals} setPlannedMeals={setPlannedMeals} roomId={roomId} />,
+    hearth: <HearthScreen go={go} showRecipe={setRecipe} profile={profile} members={members} setMembers={setMembers} plannedMeals={plannedMeals} inviteCode={inviteCode} roomName={roomName} hasNotif={hasNotif} setDishPool={setDishPool} onDishAddedToPool={addDishNotification} />,
+    match: <MatchScreen go={go} showRecipe={setRecipe} dishPool={dishPool} votes={votes} onVote={onVote} profile={profile} setPlannedMeals={setPlannedMeals} />,
+    planner: <PlannerScreen go={go} showRecipe={setRecipe} isAdmin={true} plannedMeals={plannedMeals} setPlannedMeals={setPlannedMeals} roomId={roomId} dishPool={dishPool} setDishPool={setDishPool} onDishAddedToPool={addDishNotification} />,
     profile: <ProfileScreen go={go} profile={profile} setProfile={setProfile} session={session} />,
-    notifications: <NotificationsScreen go={go} dishPool={DISH_POOL} />,
+    notifications: <NotificationsScreen go={go} notifications={notifications} setNotifications={setNotifications} />,
   };
   if (status === 'loading') return (
     <div id="root-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
